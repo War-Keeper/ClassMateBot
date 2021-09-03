@@ -1,5 +1,5 @@
 # This is a Sample test file
-
+# TODO test the todo functionality of github actions
 def sqr(x):
     return x * x
 
