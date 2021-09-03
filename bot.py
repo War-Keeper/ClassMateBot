@@ -1,11 +1,9 @@
 # bot.py
 import os
-
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
-
 
 # ASK EVAN FOR THE .ENV FILE SO YOU CAN GET THE PROPER TOKENS. DO NOT PUSH THE .ENV FILE OR THE
 # TOKEN TO THE INTERNET UNDER ANY CIRCUMSTANCES
@@ -15,7 +13,6 @@ load_dotenv()
 TOKEN = os.getenv('TOKEN')
 # Get the token for our discord server
 GUILD = os.getenv('GUILD')
-
 
 # intents = Intents.all()
 # Set all bot commands to begin with $
