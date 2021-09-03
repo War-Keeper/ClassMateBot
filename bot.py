@@ -1,21 +1,21 @@
 # bot.py
+import os
 
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
 
+
+# ASK EVAN FOR THE .ENV FILE SO YOU CAN GET THE PROPER TOKENS. DO NOT PUSH THE .ENV FILE OR THE
+# TOKEN TO THE INTERNET UNDER ANY CIRCUMSTANCES
 # Load the environment
 load_dotenv()
-# The two commented out commands should be used when using a .env file to store the TOKEN and GUILD, normally TOKEN
-# and GUILD should not be local variables but are here for testing purposes
-# TOKEN = os.getenv('TOKEN')
-# GUILD = os.getenv('GUILD')
 # Get the token for our bot
-TOKEN = 'ODgzMzgzNjYxNTg2NjgxODg3.YTJJJQ.JO4ik-7D6z78YXQpYne9jr4uQoo'
+TOKEN = os.getenv('TOKEN')
 # Get the token for our discord server
+GUILD = os.getenv('GUILD')
 
-GUILD = 'Microcosm'
 
 # intents = Intents.all()
 # Set all bot commands to begin with $
