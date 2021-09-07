@@ -19,6 +19,8 @@ bot = Bot(command_prefix="$")
 
 
 # TODO add new commands as separate files, use ping.py as a reference to how to do it
+# assignees: kunwarvidhan,salvisumedh2396,sunil1511,wevanbrown,War-Keeper
+# labels: Overall Progress
 
 @bot.command(name='test', help='purely a test function')
 async def test(ctx):
@@ -27,6 +29,8 @@ async def test(ctx):
 
 # Activate when the bot starts, prints the name of the server it joins and the names of all members of that server
 # TODO fix this command to accurately report the list of users in the guild
+# assignees: wevanbrown,War-Keeper
+# labels: bugfix
 @bot.event
 async def on_ready():
     guild = discord.utils.get(bot.guilds, name=GUILD)
@@ -50,6 +54,8 @@ async def on_ready():
 
 # Should theoretically dm someone when a new person joins but not currently working
 # TODO fix this command to send a message in the welcome channel and to send a message to newly joined members
+# assignees: wevanbrown,War-Keeper
+# labels: bugfix
 @bot.event
 async def on_member_join(member):
     for channels in member.guild.channels:
@@ -58,6 +64,8 @@ async def on_member_join(member):
 
 # Prints any potential errors to a log file
 # TODO check this this actually works correctly
+# assignees: wevanbrown,War-Keeper
+# labels: bugfix
 @bot.event
 async def on_error(event, *args, **kwargs):
     with open('err.log', 'a') as f:
