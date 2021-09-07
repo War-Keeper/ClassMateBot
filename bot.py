@@ -1,7 +1,6 @@
 # bot.py
 import os
 import discord
-from discord.ext import commands
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
 
@@ -19,14 +18,11 @@ GUILD = os.getenv('GUILD')
 bot = Bot(command_prefix="$")
 
 
+# TODO add new commands as separate files, use ping.py as a reference to how to do it
+
 @bot.command(name='test', help='purely a test function')
 async def test(ctx):
     await ctx.channel.send("does this work?")
-
-
-@bot.command(name='ping', help='purely a test ping function')
-async def ping(ctx):
-    await ctx.channel.send("pong")
 
 
 # Activate when the bot starts, prints the name of the server it joins and the names of all members of that server
@@ -40,6 +36,16 @@ async def on_ready():
 
     members = '\n -'.join([member.name for member in guild.members])
     print(f'Guild Members:\n - {members}')
+
+    for filename in os.listdir('./code'):
+        if filename.endswith('.py'):
+            try:
+                bot.load_extension(f"code.{filename[:-3]}")
+            except :
+                print("Ignoring the ClientEventTask exception!, it doesnt do anything for this program")
+
+    await bot.change_presence(activity=discord.Game("f.help"))
+    print("READY!")
 
 
 # Should theoretically dm someone when a new person joins but not currently working
@@ -62,9 +68,8 @@ async def on_error(event, *args, **kwargs):
 
 
 @bot.command(name="shutdown", help="Shuts down the bot, only usable by the owner")
-@commands.is_owner()
 async def shutdown(ctx):
-    await ctx.bot.logout()
+    ctx.bot.close
     print("Bot closed successfully")
 
 
