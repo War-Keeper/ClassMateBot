@@ -2,6 +2,7 @@
 import os
 import discord
 from discord.ext.commands import Bot
+from discord import Intents
 from dotenv import load_dotenv
 
 # ASK EVAN FOR THE .ENV FILE SO YOU CAN GET THE PROPER TOKENS. DO NOT PUSH THE .ENV FILE OR THE
@@ -13,9 +14,10 @@ TOKEN = os.getenv('TOKEN')
 # Get the token for our discord server
 GUILD = os.getenv('GUILD')
 
-# intents = Intents.all()
+intents = Intents.all()
+
 # Set all bot commands to begin with $
-bot = Bot(command_prefix="$")
+bot = Bot(intents=intents, command_prefix="$")
 
 
 # TODO add new commands as separate files, use ping.py as a reference to how to do it
@@ -46,19 +48,37 @@ async def on_ready():
             bot.load_extension(f"cogs.{filename[:-3]}")
     bot.load_extension('jishaku')
 
-    await bot.change_presence(activity=discord.Game("f.help"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='Over This Server'))
     print("READY!")
 
 
 # Should theoretically dm someone when a new person joins but not currently working
-# TODO fix this command to send a message in the welcome channel and to send a message to newly joined members
-# assignees: wevanbrown,War-Keeper
-# labels: bugfix
+
 @bot.event
 async def on_member_join(member):
-    for channels in member.guild.channels:
-        await member.channel.send('JOINED')
+    await member.send("Hello")
+    embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+    await member.send(embed=embed)
 
+    # TODO ask the member for his Full First and Last Name and add it to a list, mapping the username to the real name.
+    # Prob have to create another def called name to get the name from user, and store that in name_mapping.csv in data
+
+    # TODO figure out how to restrict user until the question is answered, then allow access to server
+
+# EXAMPLE
+# from discord import Member
+# from discord.ext.commands import has_permissions, MissingPermissions
+#
+# @bot.command(name="kick", pass_context=True)
+# @has_permissions(manage_roles=True, ban_members=True)
+# async def _kick(ctx, member: Member):
+#     await bot.kick(member)
+#
+# @_kick.error
+# async def kick_error(ctx, error):
+#     if isinstance(error, MissingPermissions):
+#         text = "Sorry {}, you do not have permissions to do that!".format(ctx.message.author)
+#         await bot.send_message(ctx.message.channel, text)
 
 # Prints any potential errors to a log file
 # TODO check this this actually works correctly
