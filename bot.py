@@ -22,10 +22,10 @@ bot = Bot(command_prefix="$")
 # assignees: kunwarvidhan,salvisumedh2396,sunil1511,wevanbrown,War-Keeper
 # labels: Overall Progress
 
+
 @bot.command(name='test', help='purely a test function')
 async def test(ctx):
     await ctx.channel.send("does this work?")
-
 
 # Activate when the bot starts, prints the name of the server it joins and the names of all members of that server
 # TODO fix this command to accurately report the list of users in the guild
@@ -41,12 +41,10 @@ async def on_ready():
     members = '\n -'.join([member.name for member in guild.members])
     print(f'Guild Members:\n - {members}')
 
-    for filename in os.listdir('./code'):
+    for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
-            try:
-                bot.load_extension(f"code.{filename[:-3]}")
-            except :
-                print("Ignoring the ClientEventTask exception!, it doesnt do anything for this program")
+            bot.load_extension(f"cogs.{filename[:-3]}")
+    bot.load_extension('jishaku')
 
     await bot.change_presence(activity=discord.Game("f.help"))
     print("READY!")
