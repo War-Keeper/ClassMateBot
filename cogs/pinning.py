@@ -1,0 +1,1 @@
+# TODO privately pin a message based on copying a message link from a channel
