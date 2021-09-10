@@ -1,8 +1,9 @@
 # bot.py
 import os
+
 import discord
-from discord.ext.commands import Bot
 from discord import Intents
+from discord.ext.commands import Bot
 from dotenv import load_dotenv
 
 # ASK EVAN FOR THE .ENV FILE SO YOU CAN GET THE PROPER TOKENS. DO NOT PUSH THE .ENV FILE OR THE
@@ -24,10 +25,6 @@ bot = Bot(intents=intents, command_prefix="$")
 # assignees: kunwarvidhan,salvisumedh2396,sunil1511,wevanbrown,War-Keeper
 # labels: Overall Progress
 
-
-@bot.command(name='test', help='purely a test function')
-async def test(ctx):
-    await ctx.channel.send("does this work?")
 
 # Activate when the bot starts, prints the name of the server it joins and the names of all members of that server
 # TODO fix this command to accurately report the list of users in the guild
@@ -57,13 +54,15 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     await member.send("Hello")
-    embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+    embed = discord.Embed(
+        description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
     await member.send(embed=embed)
 
     # TODO ask the member for his Full First and Last Name and add it to a list, mapping the username to the real name.
     # Prob have to create another def called name to get the name from user, and store that in name_mapping.csv in data
 
     # TODO figure out how to restrict user until the question is answered, then allow access to server
+
 
 # EXAMPLE
 # from discord import Member
