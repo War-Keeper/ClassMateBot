@@ -27,9 +27,6 @@ bot = Bot(intents=intents, command_prefix="$")
 
 
 # Activate when the bot starts, prints the name of the server it joins and the names of all members of that server
-# TODO fix this command to accurately report the list of users in the guild
-# assignees: wevanbrown,War-Keeper
-# labels: bugfix
 @bot.event
 async def on_ready():
     guild = discord.utils.get(bot.guilds, name=GUILD)
