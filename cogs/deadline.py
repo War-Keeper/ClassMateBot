@@ -130,7 +130,7 @@ class Deadline(commands.Cog):
             self.reminders.remove(reminder)
         if to_remove:
             json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
-            ctx.send("All reminders have been cleared..!!")
+            await ctx.send("All reminders have been cleared..!!")
 
     @commands.command(name="remindme", pass_context=True, help="Request the bot to set a reminder for a due date")
     async def remindme(self, ctx, quantity: int, time_unit : str,*, text :str):
