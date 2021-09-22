@@ -3,7 +3,7 @@ import os
 
 import discord
 from discord import Intents
-from discord.ext.commands import Bot, has_permissions
+from discord.ext.commands import Bot
 from dotenv import load_dotenv
 
 # ASK EVAN FOR THE .ENV FILE SO YOU CAN GET THE PROPER TOKENS. DO NOT PUSH THE .ENV FILE OR THE
@@ -49,11 +49,6 @@ async def on_ready():
 # Should theoretically dm someone when a new person joins but not currently working
 
 @bot.event
-async def on_message(message):
-    if message.content == "reminders":
-        await message.channel.send('ping')
-
-@bot.event
 async def on_member_join(member):
     await member.send("Hello")
     embed = discord.Embed(
@@ -94,10 +89,8 @@ async def on_error(event, *args, **kwargs):
             raise
 
 
-@bot.command(name="shutdown", help="Shuts down the bot, only usable by the owner", pass_context=True)
-@has_permissions(administrator=True)
+@bot.command(name="shutdown", help="Shuts down the bot, only usable by the owner")
 async def shutdown(ctx):
-    await ctx.send('Shutting Down...')
     ctx.bot.close
     print("Bot closed successfully")
 
