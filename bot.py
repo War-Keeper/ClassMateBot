@@ -3,7 +3,7 @@ import os
 
 import discord
 from discord import Intents
-from discord.ext.commands import Bot
+from discord.ext.commands import Bot, has_permissions
 from dotenv import load_dotenv
 
 # ASK EVAN FOR THE .ENV FILE SO YOU CAN GET THE PROPER TOKENS. DO NOT PUSH THE .ENV FILE OR THE
@@ -27,9 +27,6 @@ bot = Bot(intents=intents, command_prefix="$")
 
 
 # Activate when the bot starts, prints the name of the server it joins and the names of all members of that server
-# TODO fix this command to accurately report the list of users in the guild
-# assignees: wevanbrown,War-Keeper
-# labels: bugfix
 @bot.event
 async def on_ready():
     guild = discord.utils.get(bot.guilds, name=GUILD)
@@ -50,6 +47,11 @@ async def on_ready():
 
 
 # Should theoretically dm someone when a new person joins but not currently working
+
+@bot.event
+async def on_message(message):
+    if message.content == "reminders":
+        await message.channel.send('ping')
 
 @bot.event
 async def on_member_join(member):
@@ -92,8 +94,10 @@ async def on_error(event, *args, **kwargs):
             raise
 
 
-@bot.command(name="shutdown", help="Shuts down the bot, only usable by the owner")
+@bot.command(name="shutdown", help="Shuts down the bot, only usable by the owner", pass_context=True)
+@has_permissions(administrator=True)
 async def shutdown(ctx):
+    await ctx.send('Shutting Down...')
     ctx.bot.close
     print("Bot closed successfully")
 

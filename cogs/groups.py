@@ -16,11 +16,9 @@ class Helper(commands.Cog):
     ( For example: $join Group 0 )', pass_context=True)
     async def join(self, ctx, arg='group', arg2='-1'):
 
-        student_pool = load_pool()
         groups = load_groups()
 
-        display_name = ctx.message.author.display_name
-        member_name = student_pool[display_name.upper()]
+        member_name = ctx.message.author.display_name
 
         group_num = arg.upper() + ' ' + arg2
 
