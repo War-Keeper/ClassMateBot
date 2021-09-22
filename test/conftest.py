@@ -34,4 +34,3 @@ def pytest_sessionfinish():
             os.remove(path)
         except Exception as e:
             print(f"Error while deleting file {path}: {e}")
-    print("\nTests closed successfully")
