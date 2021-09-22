@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 # Load the environment
 load_dotenv()
 # Get the token for our bot
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv("TOKEN")
 # Get the token for our discord server
-GUILD = os.getenv('GUILD')
-
+GUILD = os.getenv("GUILD")
+UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
 intents = Intents.all()
 
 # Set all bot commands to begin with $
@@ -34,30 +34,40 @@ bot = Bot(intents=intents, command_prefix="$")
 async def on_ready():
     guild = discord.utils.get(bot.guilds, name=GUILD)
 
-    print(f'{bot.user} is connected to the following guild:\n'
-          f'{guild.name}(id: {guild.id})')
+    print(
+        f"{bot.user} is connected to the following guild:\n"
+        f"{guild.name}(id: {guild.id})"
+    )
 
-    members = '\n -'.join([member.name for member in guild.members])
-    print(f'Guild Members:\n - {members}')
+    members = "\n -".join([member.name for member in guild.members])
+    print(f"Guild Members:\n - {members}")
 
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
+    for filename in os.listdir("./cogs"):
+        if filename.endswith(".py"):
             bot.load_extension(f"cogs.{filename[:-3]}")
-    bot.load_extension('jishaku')
+    bot.load_extension("jishaku")
 
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='Over This Server'))
+    await bot.change_presence(
+        activity=discord.Activity(
+            type=discord.ActivityType.watching, name="Over This Server"
+        )
+    )
     print("READY!")
 
 
 # Should theoretically dm someone when a new person joins but not currently working
 
+
 @bot.event
 async def on_member_join(member):
-    unverified = discord.utils.get(member.guild.roles, name="guest") #finds the unverified role in the guild
+    unverified = discord.utils.get(
+        member.guild.roles, name=UNVERIFIED_ROLE_NAME
+    )  # finds the unverified role in the guild
     await member.add_roles(unverified)
     await member.send("Hello " + member.name + "!")
     embed = discord.Embed(
-        description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+        description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
+    )
     await member.send(embed=embed)
 
     await member.send("Please enter $verify your_full_name to get access to channels")
@@ -89,9 +99,9 @@ async def on_member_join(member):
 # labels: bugfix
 @bot.event
 async def on_error(event, *args, **kwargs):
-    with open('err.log', 'a') as f:
-        if event == 'on_message':
-            f.write(f'Unhandled message: {args[0]}\n')
+    with open("err.log", "a") as f:
+        if event == "on_message":
+            f.write(f"Unhandled message: {args[0]}\n")
         else:
             raise
 
