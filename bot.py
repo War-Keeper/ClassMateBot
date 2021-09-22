@@ -69,13 +69,7 @@ async def on_member_join(member):
         description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
     )
     await member.send(embed=embed)
-
     await member.send("Please enter $verify your_full_name to get access to channels")
-
-    # TODO ask the member for his Full First and Last Name and add it to a list, mapping the username to the real name.
-    # Prob have to create another def called name to get the name from user, and store that in name_mapping.csv in data
-
-    # TODO figure out how to restrict user until the question is answered, then allow access to server
 
 
 # EXAMPLE
