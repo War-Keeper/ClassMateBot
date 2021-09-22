@@ -55,9 +55,6 @@ async def on_ready():
     print("READY!")
 
 
-# Should theoretically dm someone when a new person joins but not currently working
-
-
 @bot.event
 async def on_member_join(member):
     unverified = discord.utils.get(
