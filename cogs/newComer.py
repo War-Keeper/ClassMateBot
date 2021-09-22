@@ -1,5 +1,6 @@
 # TODO intro message from bot to new students with important messages and links
 
+from bot import GUILD
 import discord
 from discord.ext import commands
 import os
@@ -38,7 +39,7 @@ class Helper(commands.Cog):
         ):  # checks if the user running the command has the unveirifed role
             if name == None:
                 await ctx.send(
-                    "Please enter $verify your_full_name to get access to channels"
+                    "To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )"
                 )
             else:
                 verified = discord.utils.get(
@@ -51,7 +52,7 @@ class Helper(commands.Cog):
                     writer.writerow([member.name, name])
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
-                await ctx.send("Thank you for verifying")
+                await ctx.send("Thank you for verifying! You can start using " + GUILD)
         else:  # user has verified role
             await ctx.send("You are already verified!")
 

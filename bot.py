@@ -66,7 +66,7 @@ async def on_member_join(member):
         description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
     )
     await member.send(embed=embed)
-    await member.send("Please enter $verify your_full_name to get access to channels")
+    await member.send("Verify yourself before getting started! \n To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )")
 
 
 # EXAMPLE
