@@ -1,5 +1,5 @@
 # TODO deadline reminder for all students
-
+# This functionality provides various methods to manage reminders (in the form of creation retrieval, updation and deletion)
 import discord
 from discord.ext import commands
 import json
@@ -15,10 +15,12 @@ class Deadline(commands.Cog):
         self.reminders = json.load(open("data/remindme/reminders.json"))
         self.units = {"second": 1, "minute": 60, "hour": 3600, "day": 86400, "week": 604800, "month": 2592000}
 
+# Test command to check if the bot is working
     @commands.command(help="A simple connection testing functionality")
     async def helpful1(self, ctx):
         await ctx.send(f"Pong! My ping currently is {round(self.bot.latency * 1000)}ms")
 
+# Adds the homework to json in the specified format
     @commands.command(name="addhw", help="add homework and due-date $addhw CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) ex. $addhw CSC510 HW2 SEP 25 2024 17:02")
     async def duedate(self, ctx, coursename: str, hwcount: str, *, date: str):
         author = ctx.message.author
@@ -53,6 +55,7 @@ class Deadline(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('To use the addhw command, do: $addhw CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) \n ( For example: $addhw CSC510 HW2 SEP 25 2024 17:02 )')
 
+# Delete a reminder using Classname and Homework name
     @commands.command(pass_context=True, help="delete a specific reminder using course name and homework name using $deletereminder CLASSNAME HW_NAME ex. $deletereminder CSC510 HW2 ")
     async def deleteReminder(self, ctx, courseName: str, hwName: str):
         author = ctx.message.author
@@ -74,6 +77,7 @@ class Deadline(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('To use the deletereminder command, do: $deletereminder CLASSNAME HW_NAME \n ( For example: $deletereminder CSC510 HW2 )')
 
+# Update the 'Due date' for a homework by providing the classname and homewwork name
     @commands.command(name="changeduedate", pass_context=True, help="update the assignment date. $changeduedate CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) ex. $changeduedate CSC510 HW2 SEP 25 2024 17:02 ")
     async def changeduedate(self, ctx, classid: str, hwid: str, *, date: str):
         author = ctx.message.author
@@ -105,6 +109,7 @@ class Deadline(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('To use the changeduedate command, do: $changeduedate CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) \n ( For example: $changeduedate CSC510 HW2 SEP 25 2024 17:02 )')
 
+#Displays all the homeworks that are due this week along with the coursename and due date
     @commands.command(name="duethisweek", pass_context=True, help="check all the homeworks that are due this week $duethisweek")
     async def duethisweek(self, ctx):
         time = ctx.message.created_at
@@ -114,6 +119,7 @@ class Deadline(commands.Cog):
             if timeleft.days <= 7:
                 await ctx.send("{} {} is due this week at {}".format(reminder["COURSE"], reminder["HOMEWORK"], reminder["DUEDATE"]))
 
+#Displays all the homeworks that are due today
     @commands.command(name="duetoday", pass_context=True, help="check all the homeworks that are due today $duetoday")
     async def duetoday(self, ctx):
         flag = True
@@ -125,6 +131,7 @@ class Deadline(commands.Cog):
         if(flag):
             await ctx.send("You have no dues today..!!")
 
+#Displays all the homeworks that are due for a specific course
     @commands.command(name="coursedue", pass_context=True, help="check all the homeworks that are due for a specific course $coursedue coursename ex. $coursedue CSC505")
     async def coursedue(self, ctx, courseid: str):
         course_due = []
@@ -140,6 +147,7 @@ class Deadline(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('To use the coursedue command, do: $coursedue CLASSNAME \n ( For example: $coursedue CSC510 )')
 
+#Print out all the reminders
     @commands.command(name="listreminders", pass_context=True, help="lists all reminders")
     async def listreminders(self, ctx):
         to_remove = []
@@ -155,6 +163,7 @@ class Deadline(commands.Cog):
             else:
                 to_remove.append(reminder)
 
+#Delete all the reminders
     @commands.command(name="clearreminders", pass_context=True, help="deletes all reminders")
     async def clearallreminders(self, ctx):
         to_remove = []
@@ -166,6 +175,7 @@ class Deadline(commands.Cog):
             json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
             await ctx.send("All reminders have been cleared..!!")
 
+#Personal remind me functionality
     @commands.command(name="remindme", pass_context=True, help="Request the bot to set a reminder for a due date")
     async def remindme(self, ctx, quantity: int, time_unit : str,*, text :str):
 
@@ -196,6 +206,7 @@ class Deadline(commands.Cog):
     async def on_command_error(self, ctx, error):
         await ctx.send('Unidentified command..please use $help to get the list of available comamnds')
 
+# asynchronously keeps on tracking the json file for expired reminders and cleans them.
     async def delete_old_reminders(self):
         print("inside delete old reminders")
         while self is self.bot.get_cog("Deadline"):
