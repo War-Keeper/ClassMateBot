@@ -159,8 +159,8 @@ class Deadline(commands.Cog):
         json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
 
     async def delete_old_reminders(self):
-        # print("inside delete old reminders")
-        # print(self.bot.get_cog("Deadline"))
+        print("inside delete old reminders")
+        #print(self.bot.get_cog("Deadline"))
         while self is self.bot.get_cog("Deadline"):
             to_remove = []
             for reminder in self.reminders:
@@ -187,7 +187,7 @@ def check_folders():
 
 def check_files():
     f = "data/remindme/reminders.json"
-    # print("Creating file...")
+    print("Creating file...")
     if not os.path.exists(f):
         print("Creating empty reminders.json...")
         json.dump([], open(f, "w"))
