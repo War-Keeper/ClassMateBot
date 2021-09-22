@@ -15,11 +15,11 @@ class Deadline(commands.Cog):
         self.reminders = json.load(open("data/remindme/reminders.json"))
         self.units = {"second": 1, "minute": 60, "hour": 3600, "day": 86400, "week": 604800, "month": 2592000}
 
-    @commands.command()
+    @commands.command(help="A simple connection testing functionality")
     async def helpful1(self, ctx):
         await ctx.send(f"Pong! My ping currently is {round(self.bot.latency * 1000)}ms")
 
-    @commands.command(name="addhw")
+    @commands.command(name="addhw", help="add homework and due-date $addhw CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) ex. $addhw CSC510 HW2 SEP 25 2024 17:02")
     async def duedate(self, ctx, coursename: str, hwcount: str, *, date: str):
         author = ctx.message.author
         # print('Author: '+str(author)+' coursename: '+coursename+' homework count: '+hwcount+' date: '+str(date))
@@ -34,12 +34,26 @@ class Deadline(commands.Cog):
                 return
         a_timedelta = duedate - datetime.today()
         seconds = (time.time() + a_timedelta.total_seconds())
-        self.reminders.append(
-            {"ID": author.id, "COURSE": coursename, "HOMEWORK": hwcount, "DUEDATE": str(duedate), "FUTURE": seconds})
-        json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
-        await ctx.send("A date has been added for: {} homework named: {} which is due on: {} by {}.".format(coursename, hwcount,str(duedate), author))
+        flag = True
+        if self.reminders:
+            for reminder in self.reminders:
+                if ((reminder["COURSE"] == coursename) and (reminder["HOMEWORK"] == hwcount)):
+                    flag = False
+                    break
+        if (flag):
+            self.reminders.append({"ID": author.id, "COURSE": coursename, "HOMEWORK": hwcount, "DUEDATE": str(duedate),"FUTURE": seconds})
+            json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
+            await ctx.send(
+                "A date has been added for: {} homework named: {} which is due on: {} by {}.".format(coursename,hwcount,str(duedate),author))
+        else:
+            await ctx.send("This homework has already been added..!!")
 
-    @commands.command(pass_context=True)
+    @duedate.error
+    async def duedate_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('To use the addhw command, do: $addhw CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) \n ( For example: $addhw CSC510 HW2 SEP 25 2024 17:02 )')
+
+    @commands.command(pass_context=True, help="delete a specific reminder using course name and homework name using $deletereminder CLASSNAME HW_NAME ex. $deletereminder CSC510 HW2 ")
     async def deleteReminder(self, ctx, courseName: str, hwName: str):
         author = ctx.message.author
         to_remove = []
@@ -55,8 +69,13 @@ class Deadline(commands.Cog):
             json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
             await ctx.send("Following reminder has been deleted: Course: {}, Homework Name: {}, Due Date: {}".format(str(reminder["COURSE"]), str(reminder["HOMEWORK"]), str(reminder["DUEDATE"])))
 
-    @commands.command(name="changeduedate", pass_context=True)
-    async def change_due_date(self, ctx, classid: str, hwid: str, *, date: str):
+    @deleteReminder.error
+    async def deleteReminder_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('To use the deletereminder command, do: $deletereminder CLASSNAME HW_NAME \n ( For example: $deletereminder CSC510 HW2 )')
+
+    @commands.command(name="changeduedate", pass_context=True, help="update the assignment date. $changeduedate CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) ex. $changeduedate CSC510 HW2 SEP 25 2024 17:02 ")
+    async def changeduedate(self, ctx, classid: str, hwid: str, *, date: str):
         author = ctx.message.author
         flag = False
         try:
@@ -78,9 +97,15 @@ class Deadline(commands.Cog):
                 flag = True
                 if (flag):
                     json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
-                    await ctx.send("{} {} has been updated with following date: {} by {}".format(classid, hwid,reminder["DUEDATE"],self.bot.user(reminder["ID"])))
+                    await ctx.send("{} {} has been updated with following date: {}".format(classid, hwid, reminder["DUEDATE"]))
+                    #await ctx.send("Data updated..!!")
 
-    @commands.command(name="duethisweek", pass_context=True)
+    @changeduedate.error
+    async def changeduedate_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('To use the changeduedate command, do: $changeduedate CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) \n ( For example: $changeduedate CSC510 HW2 SEP 25 2024 17:02 )')
+
+    @commands.command(name="duethisweek", pass_context=True, help="check all the homeworks that are due this week $duethisweek")
     async def duethisweek(self, ctx):
         time = ctx.message.created_at
         for reminder in self.reminders:
@@ -89,14 +114,18 @@ class Deadline(commands.Cog):
             if timeleft.days <= 7:
                 await ctx.send("{} {} is due this week at {}".format(reminder["COURSE"], reminder["HOMEWORK"], reminder["DUEDATE"]))
 
-    @commands.command(name="duetoday", pass_context=True)
+    @commands.command(name="duetoday", pass_context=True, help="check all the homeworks that are due today $duetoday")
     async def duetoday(self, ctx):
+        flag = True
         for reminder in self.reminders:
             timedate = datetime.strptime(reminder["DUEDATE"], '%Y-%m-%d %H:%M:%S')
             if timedate.date() == ctx.message.created_at.date():
+                flag = False
                 await ctx.send("{} {} is due today at {}".format(reminder["COURSE"], reminder["HOMEWORK"], timedate.time()))
+        if(flag):
+            await ctx.send("You have no dues today..!!")
 
-    @commands.command(name="coursedue", pass_context=True)
+    @commands.command(name="coursedue", pass_context=True, help="check all the homeworks that are due for a specific course $coursedue coursename ex. $coursedue CSC505")
     async def coursedue(self, ctx, courseid: str):
         course_due = []
         for reminder in self.reminders:
@@ -105,6 +134,11 @@ class Deadline(commands.Cog):
                 await  ctx.send("{} is due at {}".format(reminder["HOMEWORK"], reminder["DUEDATE"]))
         if not course_due:
             await ctx.send("Rejoice..!! You have no pending homeworks for {}..!!".format(courseid))
+
+    @coursedue.error
+    async def coursedue_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('To use the coursedue command, do: $coursedue CLASSNAME \n ( For example: $coursedue CSC510 )')
 
     @commands.command(name="listreminders", pass_context=True, help="lists all reminders")
     async def listreminders(self, ctx):
@@ -158,9 +192,12 @@ class Deadline(commands.Cog):
         await ctx.send("I will remind you that in {} {}.".format(str(quantity), time_unit + s))
         json.dump(self.reminders, open("data/remindme/reminders.json", "w"))
 
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        await ctx.send('Unidentified command..please use $help to get the list of available comamnds')
+
     async def delete_old_reminders(self):
         print("inside delete old reminders")
-        #print(self.bot.get_cog("Deadline"))
         while self is self.bot.get_cog("Deadline"):
             to_remove = []
             for reminder in self.reminders:
@@ -199,4 +236,3 @@ def setup(bot):
     loop = asyncio.get_event_loop()
     loop.create_task(n.delete_old_reminders())
     bot.add_cog(n)
-
