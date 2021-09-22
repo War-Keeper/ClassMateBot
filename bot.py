@@ -53,10 +53,14 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    await member.send("Hello")
+    unverified = discord.utils.get(member.guild.roles, name="guest") #finds the unverified role in the guild
+    await member.add_roles(unverified)
+    await member.send("Hello " + member.name + "!")
     embed = discord.Embed(
         description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
     await member.send(embed=embed)
+
+    await member.send("Please enter $verify your_full_name to get access to channels")
 
     # TODO ask the member for his Full First and Last Name and add it to a list, mapping the username to the real name.
     # Prob have to create another def called name to get the name from user, and store that in name_mapping.csv in data
