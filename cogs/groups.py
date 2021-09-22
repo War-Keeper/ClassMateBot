@@ -19,8 +19,7 @@ class Helper(commands.Cog):
         student_pool = load_pool()
         groups = load_groups()
 
-        display_name = ctx.message.author.display_name
-        member_name = student_pool[display_name.upper()]
+        member_name = ctx.message.author.display_name.upper()
 
         group_num = arg.upper() + ' ' + arg2
 
