@@ -5,6 +5,8 @@ import os
 import csv
 import random
 
+from discord.file import File
+
 class Helper(commands.Cog):
     GUILD = os.getenv("GUILD")
     UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
@@ -58,8 +60,9 @@ class Helper(commands.Cog):
                 welcome_images = os.listdir(self.path)
                 selected_image = random.choice(welcome_images)
                 print(selected_image)
-                # embed.set_image(discord.File(selected_image))
-                await member.send(embed=embed)
+                file=discord.File(self.path + "\\" + selected_image)
+                embed.set_image(url = "attachment://"+ selected_image)
+                await member.send(file=file, embed=embed)
 
         else:  # user has verified role
             await ctx.send("You are already verified!")
