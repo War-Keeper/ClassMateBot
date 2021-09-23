@@ -83,6 +83,7 @@ class Voting(commands.Cog):
     # Bot command for remove, do: $vote \'Project\' <Num>
     # -----------------------------------------------------------
     @commands.command(name='projects', help='print projects with groups assigned to them', pass_context=True)
+    @commands.dm_only()
     async def projects(self, ctx):
 
         projects = load_projects()
