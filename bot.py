@@ -62,10 +62,6 @@ async def on_member_join(member):
     )  # finds the unverified role in the guild
     await member.add_roles(unverified)
     await member.send("Hello " + member.name + "!")
-    embed = discord.Embed(
-        description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
-    )
-    await member.send(embed=embed)
     await member.send("Verify yourself before getting started! \n To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )")
 
 
