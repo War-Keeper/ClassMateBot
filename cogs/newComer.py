@@ -34,9 +34,7 @@ class Helper(commands.Cog):
         unverified = discord.utils.get(
             guild.roles, name=self.UNVERIFIED_ROLE_NAME
         )  # finds the unverified role in the guild
-        if (
-            unverified in member.roles
-        ):  # checks if the user running the command has the unveirifed role
+        if (unverified in member.roles):  # checks if the user running the command has the unveirifed role
             if name == None:
                 await ctx.send(
                     "To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )"
@@ -53,8 +51,12 @@ class Helper(commands.Cog):
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
                 await ctx.send("Thank you for verifying! You can start using " + GUILD)
+                embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                await member.send(embed=embed)
         else:  # user has verified role
             await ctx.send("You are already verified!")
+            embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+            await member.send(embed=embed)
 
 
 def setup(bot):
