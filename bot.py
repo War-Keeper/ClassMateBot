@@ -5,6 +5,7 @@ import discord
 from discord import Intents
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
+from discord.ext.commands import Bot, has_permissions, CheckFailure
 
 # ASK EVAN FOR THE .ENV FILE SO YOU CAN GET THE PROPER TOKENS. DO NOT PUSH THE .ENV FILE OR THE
 # TOKEN TO THE INTERNET UNDER ANY CIRCUMSTANCES
@@ -27,9 +28,6 @@ bot = Bot(intents=intents, command_prefix="$")
 
 
 # Activate when the bot starts, prints the name of the server it joins and the names of all members of that server
-# TODO fix this command to accurately report the list of users in the guild
-# assignees: wevanbrown,War-Keeper
-# labels: bugfix
 @bot.event
 async def on_ready():
     guild = discord.utils.get(bot.guilds, name=GUILD)
@@ -54,7 +52,6 @@ async def on_ready():
     )
     print("READY!")
 
-
 @bot.event
 async def on_member_join(member):
     unverified = discord.utils.get(
@@ -65,25 +62,7 @@ async def on_member_join(member):
     await member.send("Verify yourself before getting started! \n To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )")
 
 
-# EXAMPLE
-# from discord import Member
-# from discord.ext.commands import has_permissions, MissingPermissions
-#
-# @bot.command(name="kick", pass_context=True)
-# @has_permissions(manage_roles=True, ban_members=True)
-# async def _kick(ctx, member: Member):
-#     await bot.kick(member)
-#
-# @_kick.error
-# async def kick_error(ctx, error):
-#     if isinstance(error, MissingPermissions):
-#         text = "Sorry {}, you do not have permissions to do that!".format(ctx.message.author)
-#         await bot.send_message(ctx.message.channel, text)
-
 # Prints any potential errors to a log file
-# TODO check this this actually works correctly
-# assignees: wevanbrown,War-Keeper
-# labels: bugfix
 @bot.event
 async def on_error(event, *args, **kwargs):
     with open("err.log", "a") as f:
@@ -94,10 +73,12 @@ async def on_error(event, *args, **kwargs):
 
 
 @bot.command(name="shutdown", help="Shuts down the bot, only usable by the owner")
+@has_permissions(administrator=True)
 async def shutdown(ctx):
-    ctx.bot.close
+    await ctx.send('Shutting Down bot')
     print("Bot closed successfully")
-
+    ctx.bot.logout()
+    exit()
 
 # Starts the bot with the current token
 bot.run(TOKEN)

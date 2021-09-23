@@ -1,4 +1,4 @@
-# TODO work on voting for projects
+
 import csv
 import discord
 from discord.ext import commands
@@ -6,7 +6,7 @@ from discord.ext import commands
 # This File contains commands for voting on projects,
 # displaying which groups have signed up for which project
 # -----------------------------------------------------------
-class Helper(commands.Cog):
+class Voting(commands.Cog):
 
     # -----------------------------------------------------------
     # initialize
@@ -83,13 +83,13 @@ class Helper(commands.Cog):
     # Bot command for remove, do: $vote \'Project\' <Num>
     # -----------------------------------------------------------
     @commands.command(name='projects', help='print projects with groups assigned to them', pass_context=True)
+    @commands.dm_only()
     async def projects(self, ctx):
 
         projects = load_projects()
-
+        overall = ''
         for key in projects.keys():
             if key != 'PROJECT_NUM':
-                overall = ''
                 s = ''
                 temp = projects[key]
                 for num in temp:
@@ -98,7 +98,7 @@ class Helper(commands.Cog):
                     overall += key + ': ' + s[:-2] + '\n'
                 else:
                     overall += key + ': \n'
-                await ctx.send(overall)
+        await ctx.send(overall)
 # -----------------------------------------------------------
 # Used to load the Project from the csv file into a dictionary
 # -----------------------------------------------------------
@@ -152,4 +152,4 @@ def print_groups(group):
 # add the file to the bot's cog system
 # -----------------------------------------------------------
 def setup(bot):
-    bot.add_cog(Helper(bot))
+    bot.add_cog(Voting(bot))

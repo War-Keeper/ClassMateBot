@@ -115,6 +115,7 @@ class Groups(commands.Cog):
     # Bot command for group, do: $group
     # -----------------------------------------------------------
     @commands.command(name='group', help='print amount of groups that are full', pass_context=True)
+    @commands.dm_only()
     async def group(self, ctx):
 
         # load groups csv
