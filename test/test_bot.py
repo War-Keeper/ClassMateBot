@@ -53,7 +53,7 @@ async def test_deadline(bot):
     assert dpytest.verify().message().contains().content(
         "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
     # Test deleting reminder
-    await dpytest.message("$deleteReminder CSC510 HW1")
+    await dpytest.message("$deletereminder CSC510 HW1")
     assert dpytest.verify().message().content(
         "Following reminder has been deleted: Course: CSC510, Homework Name: HW1, Due Date: 2050-12-21 19:59:00")
     # Test re-adding a reminder
