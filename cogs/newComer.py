@@ -1,15 +1,15 @@
 # TODO intro message from bot to new students with important messages and links
-
 import discord
 from discord.ext import commands
 import os
 import csv
-
+import random
 
 class Helper(commands.Cog):
     GUILD = os.getenv("GUILD")
     UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
     VERIFIED_MEMBER_ROLE = os.getenv("VERIFIED_MEMBER_ROLE")
+    path="data\welcome"
 
     def __init__(self, bot):
         self.bot = bot
@@ -30,30 +30,33 @@ class Helper(commands.Cog):
             if g.name == self.GUILD:
                 guild = g
         member = guild.get_member(ctx.message.author.id)
-        unverified = discord.utils.get(
-            guild.roles, name=self.UNVERIFIED_ROLE_NAME
-        )  # finds the unverified role in the guild
-        if (
-            unverified in member.roles
-        ):  # checks if the user running the command has the unveirifed role
+        unverified = discord.utils.get(guild.roles, name=self.UNVERIFIED_ROLE_NAME)  # finds the unverified role in the guild
+        if (unverified in member.roles):  # checks if the user running the command has the unveirifed role
             if name == None:
                 await ctx.send(
-                    "Please enter $verify your_full_name to get access to channels"
+                    "To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )"
                 )
             else:
-                verified = discord.utils.get(
-                    guild.roles, name=self.VERIFIED_MEMBER_ROLE
-                )  # finds the verified role in the guild
-                with open(
-                    "data/server_data/name_mapping.csv", mode="a", newline=""
-                ) as outfile:  # storing discord name and actual name in name_mapping.csv
+                verified = discord.utils.get(guild.roles, name=self.VERIFIED_MEMBER_ROLE)  # finds the verified role in the guild
+
+                # storing discord name and actual name in name_mapping.csv
+                with open("data/server_data/name_mapping.csv", mode="a", newline="") as outfile:  
                     writer = csv.writer(outfile)
                     writer.writerow([member.name, name])
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
-                await ctx.send("Thank you for verifying")
+                await ctx.send("Thank you for verifying! You can start using " + self.GUILD + "!")
+                embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                welcome_images = os.listdir(self.path)
+                selected_image = random.choice(welcome_images) # randomly choosing image from welcome directory
+                file=discord.File(self.path + "\\" + selected_image)
+                embed.set_image(url = "attachment://"+ selected_image) # Embedding the image
+                await member.send(file=file, embed=embed)
+
         else:  # user has verified role
             await ctx.send("You are already verified!")
+            embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+            await member.send(embed=embed)
 
 
 def setup(bot):
