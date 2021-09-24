@@ -1,5 +1,7 @@
 # TODO deadline reminder for all students
-# This functionality provides various methods to manage reminders (in the form of creation retrieval, updation and deletion)
+# This functionality provides various methods to manage reminders (in the form of creation, retrieval, updation and deletion)
+# A user can set up a reminder, check what is due this week or what is due today. He/She can also check all the due homeworks based on hte coursename.
+# A user can also update or delete a reminder if needed.
 import discord
 from discord.ext import commands
 import json
