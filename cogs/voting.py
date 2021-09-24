@@ -2,6 +2,7 @@
 import csv
 import discord
 from discord.ext import commands
+import os
 # -----------------------------------------------------------
 # This File contains commands for voting on projects,
 # displaying which groups have signed up for which project
@@ -103,7 +104,11 @@ class Voting(commands.Cog):
 # Used to load the Project from the csv file into a dictionary
 # -----------------------------------------------------------
 def load_projects() -> dict:
-    with open('data/server_data/Project_mapping.csv', mode='r') as infile:
+    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(dir)
+    os.chdir('data')
+    os.chdir('server_data')
+    with open('Project_mapping.csv', mode='r') as infile:
         reader = csv.reader(infile)
         student_pools = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
                                            rows[5].upper(), rows[6].upper()] for rows in reader}
@@ -116,7 +121,11 @@ def load_projects() -> dict:
 # Used to print the Projects to the csv file
 # -----------------------------------------------------------
 def print_projects(projects):
-    with open('data/server_data/Project_mapping.csv', mode='w', newline="") as outfile:
+    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(dir)
+    os.chdir('data')
+    os.chdir('server_data')
+    with open('Project_mapping.csv', mode='w', newline="") as outfile:
         writer = csv.writer(outfile)
         for key in projects.keys():
             while len(projects[key]) < 6:
@@ -127,7 +136,11 @@ def print_projects(projects):
 # Used to load the groups from the csv file into a dictionary
 # -----------------------------------------------------------
 def load_groups() -> dict:
-    with open('data/server_data/groups.csv', mode='r') as infile:
+    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(dir)
+    os.chdir('data')
+    os.chdir('server_data')
+    with open('groups.csv', mode='r') as infile:
         reader = csv.reader(infile)
         group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
                                    rows[5].upper(), rows[6].upper()] for rows in reader}

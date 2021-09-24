@@ -1,7 +1,7 @@
 
 import discord
 from discord.ext import commands
-
+import os
 import csv
 # -----------------------------------------------------------
 # This File contains commands for joining a group, leaving a group,
@@ -167,7 +167,11 @@ class Groups(commands.Cog):
 # Used to load the groups from the csv file into a dictionary
 # -----------------------------------------------------------
 def load_groups() -> dict:
-    with open('data/server_data/groups.csv', mode='r') as infile:
+    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(dir)
+    os.chdir('data')
+    os.chdir('server_data')
+    with open('groups.csv', mode='r') as infile:
         reader = csv.reader(infile)
         group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
                                    rows[5].upper(), rows[6].upper()] for rows in reader}
@@ -181,7 +185,11 @@ def load_groups() -> dict:
 # Used to print the groups to the csv file
 # -----------------------------------------------------------
 def print_groups(group):
-    with open('data/server_data/groups.csv', mode='w', newline="") as outfile:
+    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(dir)
+    os.chdir('data')
+    os.chdir('server_data')
+    with open('groups.csv', mode='w', newline="") as outfile:
         writer = csv.writer(outfile)
         for key in group.keys():
             while len(group[key]) < 6:
@@ -192,7 +200,11 @@ def print_groups(group):
 # Used to load the members from the csv file into a dictionary
 # -----------------------------------------------------------
 def load_pool() -> dict:
-    with open('data/server_data/name_mapping.csv', mode='r') as infile:
+    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(dir)
+    os.chdir('data')
+    os.chdir('server_data')
+    with open('name_mapping.csv', mode='r') as infile:
         reader = csv.reader(infile)
         student_pools = {rows[0].upper(): rows[1].upper() for rows in reader}
     return student_pools
@@ -201,7 +213,11 @@ def load_pool() -> dict:
 # Used to print the members to the csv file
 # -----------------------------------------------------------
 def print_pool(pools):
-    with open('data/server_data/name_mapping.csv', mode='w', newline="") as outfile:
+    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(dir)
+    os.chdir('data')
+    os.chdir('server_data')
+    with open('name_mapping.csv', mode='w', newline="") as outfile:
         writer = csv.writer(outfile)
         for key, value in pools.items():
             writer.writerow([key, value])
