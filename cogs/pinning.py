@@ -83,7 +83,6 @@ def check_folders():
 
 def check_files():
     f = "data/PinMessage/PinnedMessages.json"
-    # print("Creating file...")
     if not os.path.exists(f):
         print("Creating empty PinnedMessages.json...")
         json.dump([], open(f, "w"))
