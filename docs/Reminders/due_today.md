@@ -18,4 +18,4 @@ $duetoday
 ```
 Successful execution of this command will display all the homeworks that are due on that day.
 
-![$duethisweek](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/duetoday.gif)
+![$duetoday](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/duetoday.gif)
