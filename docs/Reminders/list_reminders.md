@@ -11,11 +11,11 @@ This function takes as arguments the values provided by the constructor through 
 
 # How to run it? (Small Example)
 Let's say that you are in the server that has the Classmate Bot active and online. All you have to do is 
-enter the command 'listreminders' pass in all the parameters as a space seperated inputs in the following order:
+enter the command 'listreminders' with no parameters:
 
 ```
 $listreminders
 ```
-Successful execution of this command will add the reminder for the specified coursework and homework on the specified time.
+Successful execution of this command will all the reminders for all the courses and their corresponding homeworks.
 
 ![$listreminders](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/listreminders.gif)
