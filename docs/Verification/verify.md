@@ -20,3 +20,5 @@ $verify your_full_name
 $verify Jane Doe
 ```
 Successful execution of this command will assign you some verified role and give you the access to the chanels. You will also receive a welcome message from Classmate Bot with important links related to the course.
+
+![$verify Jane Doe](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/verify.gif)
