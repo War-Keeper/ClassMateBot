@@ -6,7 +6,7 @@ The code that implements the above mentioned gits functionality is located [here
 
 # Code Description
 ## Functions
-1. addMessage(self, ctx, tagname: str, link: str, *, description: str): <br>
+addMessage(self, ctx, tagname: str, link: str, *, description: str): <br>
 This function takes as arguments the values provided by the constructor through self, context in which the command was called, tag-name of the pinned message, link of the message to be pinned, and the description given by the student.
 
 # How to run it? (Small Example)
