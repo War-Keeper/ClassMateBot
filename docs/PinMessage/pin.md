@@ -12,7 +12,7 @@ This function takes as arguments the values provided by the constructor through 
 # How to run it? (Small Example)
 Let's say that you are in the server that has the Classmate Bot active and online. All you have to do is 
 enter the command 'pin' pass in all the parameters as a space seperated inputs in the following order:
-tagname, link of the message, description
+tagname, link of the message, description.
 ```
 $pin TAGNAME LINK DESCRIPTION
 $pin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890813190433292298 HW8 reminder
