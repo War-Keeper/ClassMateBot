@@ -53,14 +53,29 @@ async def test_deadline(bot):
     assert dpytest.verify().message().contains().content(
         "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
     # Test deleting reminder
-    await dpytest.message("$deleteReminder CSC510 HW1")
+    await dpytest.message("$deletereminder CSC510 HW1")
     assert dpytest.verify().message().content(
         "Following reminder has been deleted: Course: CSC510, Homework Name: HW1, Due Date: 2050-12-21 19:59:00")
     # Test re-adding a reminder
     await dpytest.message("$addhw CSC510 HW1 DEC 21 2050 19:59")
     assert dpytest.verify().message().contains().content(
         "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
+    # Clear reminders at the end of testing since we're using a local JSON file to store them
+    await dpytest.message("$clearreminders")
+    assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
+
+
+# Test listing multiple reminders
+@pytest.mark.asyncio
+async def test_listreminders(bot):
     # Test listing multiple reminders
+    await dpytest.message("$addhw CSC505 DANCE SEP 21 2050 10:00")
+    assert dpytest.verify().message().contains().content(
+        "A date has been added for: CSC505 homework named: DANCE which is due on: 2050-09-21 10:00:00")
+    # Test setting a 2nd reminder
+    await dpytest.message("$addhw CSC510 HW1 DEC 21 2050 19:59")
+    assert dpytest.verify().message().contains().content(
+        "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
     await dpytest.message("$listreminders")
     assert dpytest.verify().message().contains().content(
         "CSC505 homework named: DANCE which is due on: 2050-09-21 10:00:00")
@@ -74,6 +89,15 @@ async def test_deadline(bot):
     await dpytest.message("$changeduedate CSC505 DANCE 4")
     assert dpytest.verify().message().contains().content(
         "Due date could not be parsed")
+    # Clear reminders at the end of testing since we're using a local JSON file to store them
+    await dpytest.message("$clearreminders")
+    assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
+
+    # Tests cogs/deadline.py
+
+
+@pytest.mark.asyncio
+async def test_duethisweek(bot):
     # Try adding a reminder due in an hour
     now = datetime.now() + timedelta(hours=1)
     dt_string = now.strftime("%b %d %Y %H:%M")
@@ -100,13 +124,16 @@ async def test_pinning(bot):
     # print(dpytest.get_message().content)
     assert dpytest.verify().message().contains().content(
         "A new message has been pinned with tag: TestMessage and link: www.discord.com with a description: this is also a test")
-    # Test the list of pinned messages
-    # await dpytest.message("$pinnedmessages TestMessage")
+
+
+# Tests cogs/pinning
+@pytest.mark.asyncio
+async def test_unpinning(bot):
+    # Test pinning a message
+    await dpytest.message("$pin TestMessage www.google.com this is a test")
     # print(dpytest.get_message().content)
-    # assert dpytest.verify().message().contains().content(
-    #     "Tag: TestMessage, Message Link: www.google.com, Description: this is a test")
-    # assert dpytest.verify().message().contains().content(
-    #     "Tag: TestMessage, Message Link: www.discord.com, Description: this is also a test")
+    assert dpytest.verify().message().contains().content(
+        "A new message has been pinned with tag: TestMessage and link: www.google.com with a description: this is a test")
     # Tests unpinning a message that doesn't exist
     await dpytest.message("$unpin None ThisWillFail")
     assert dpytest.verify().message().contains().content(
@@ -122,3 +149,19 @@ async def test_pinning(bot):
     await dpytest.message("$updatepin TestMessage2 www.zoom.com test")
     assert dpytest.verify().message().contains().content(
         "A pinned message has been updated with tag: TestMessage2 and new link: www.zoom.com")
+
+# Tests cogs/newComer
+@pytest.mark.asyncio
+async def test_unpinning(bot):
+    print(dpytest.get_config())
+    # Test verification, should raise exception since channel isn't private
+    with pytest.raises(Exception):
+        await dpytest.message(content="$verify", channel=0)
+    # Can only test this currently since dpytest doesn't allow us to test DM'ing
+
+# Tests cogs/newComer
+@pytest.mark.asyncio
+async def test_voting(bot):
+    # Test voting, should raise an exception since we aren't in a group
+    with pytest.raises(Exception):
+        await dpytest.message(content="$vote Project 1")

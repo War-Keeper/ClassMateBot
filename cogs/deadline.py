@@ -1,5 +1,7 @@
 # TODO deadline reminder for all students
-# This functionality provides various methods to manage reminders (in the form of creation retrieval, updation and deletion)
+# This functionality provides various methods to manage reminders (in the form of creation, retrieval, updation and deletion)
+# A user can set up a reminder, check what is due this week or what is due today. He/She can also check all the due homeworks based on hte coursename.
+# A user can also update or delete a reminder if needed.
 import discord
 from discord.ext import commands
 import json
@@ -56,7 +58,7 @@ class Deadline(commands.Cog):
             await ctx.send('To use the addhw command, do: $addhw CLASSNAME HW_NAME MMM DD YYYY optional(HH:MM) \n ( For example: $addhw CSC510 HW2 SEP 25 2024 17:02 )')
 
 # Delete a reminder using Classname and Homework name
-    @commands.command(pass_context=True, help="delete a specific reminder using course name and homework name using $deletereminder CLASSNAME HW_NAME ex. $deletereminder CSC510 HW2 ")
+    @commands.command(name="deletereminder", pass_context=True, help="delete a specific reminder using course name and homework name using $deletereminder CLASSNAME HW_NAME ex. $deletereminder CSC510 HW2 ")
     async def deleteReminder(self, ctx, courseName: str, hwName: str):
         author = ctx.message.author
         to_remove = []
@@ -162,6 +164,8 @@ class Deadline(commands.Cog):
                 pass
             else:
                 to_remove.append(reminder)
+        if not self.reminders:
+            await ctx.send("Mission Accomplished..!! You don't have any more dues..!!")
 
 #Delete all the reminders
     @commands.command(name="clearreminders", pass_context=True, help="deletes all reminders")
