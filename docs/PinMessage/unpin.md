@@ -6,13 +6,13 @@ The code that implements the above mentioned gits functionality is located [here
 
 # Code Description
 ## Functions
-1. deleteMessage(self, ctx, tagname: str, *, description: str): <br>
+deleteMessage(self, ctx, tagname: str, *, description: str): <br>
 This function takes as arguments the values provided by the constructor through self, context in which the command was called, tag-name of the pinned message and the description given by the student.
 
 # How to run it? (Small Example)
 Let's say that you are in the server that has the Classmate Bot active and online. All you have to do is 
 enter the command 'unpin' pass in all the parameters as a space seperated inputs in the following order:
-tagname, link of the message, description
+tagname, link of the message, description.
 ```
 $unpin TAGNAME DESCRIPTION
 $unpin HW HW8 reminder
