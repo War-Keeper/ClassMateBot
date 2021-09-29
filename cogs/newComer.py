@@ -18,10 +18,16 @@ class Helper(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # --------------------------------------------------------------------------------------------------
-    # Verify command, gives the user the verified role if they don't already have it, which can be used
-    # to control individual permissions
-    # --------------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------------------
+    #    Function: verify(self, ctx, *, name: str = None)
+    #    Description: Ask the bot to give the user the verified role in the server
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - *:
+    #    - name: name of the user to verify
+    #    Outputs: returns a success message if the user is sucessfully verified or error in case of syntax problems
+    # --------------------------------------------------------------------------------------------------------------
     @commands.dm_only()
     @commands.command(
         name="verify",

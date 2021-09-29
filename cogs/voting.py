@@ -10,15 +10,23 @@ import os
 # -----------------------------------------------------------
 class Voting(commands.Cog):
 
-    # -----------------------------------------------------------
+    # -----------
     # initialize
-    # -----------------------------------------------------------
+    # -----------
     def __init__(self, bot):
         self.bot = bot
 
-    # -----------------------------------------------------------
-    # Bot command for join, do: $join \'Project\' <Num>
-    # -----------------------------------------------------------
+    # ----------------------------------------------------------------------------------------------------------
+    #    Function: vote(self, ctx, arg='Project', arg2='-1')
+    #    Description: "votes" for the given project by adding the user to it
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - arg: the name of the project
+    #    - arg2: the number of the project
+    #    Outputs: adds the user to the given project or returns an error if the project is invalid or the user
+    #             is not in a valid group
+    # ----------------------------------------------------------------------------------------------------------
     @commands.command(name='vote', help='Used for voting for Project 2 and 3, \
     To use the vote command, do: $vote \'Project\' <Num> \n \
     (For example: $vote project 0)', pass_context=True)
@@ -81,9 +89,14 @@ class Voting(commands.Cog):
             await ctx.send('To join a group, use the join command, do: $vote \'Project\' <Num> \n \
             ( For example: $vote Project 0 )')
 
-    # -----------------------------------------------------------
-    # Bot command for remove, do: $vote \'Project\' <Num>
-    # -----------------------------------------------------------
+    # ----------------------------------------------------------------------------------
+    #    Function: projects(self, ctx)
+    #    Description: prints the list of current projects
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    Outputs: prints the list of current projects
+    # ----------------------------------------------------------------------------------
     @commands.command(name='projects', help='print projects with groups assigned to them', pass_context=True)
     @commands.dm_only()
     async def projects(self, ctx):

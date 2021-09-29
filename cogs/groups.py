@@ -18,9 +18,17 @@ class Groups(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # -----------------------------------------------------------
-    # Bot command for join, do: $join 'Group' <Num>
-    # -----------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------------
+    #    Function: join(self, ctx, arg='group', arg2='-1')
+    #    Description: joins the user to the given group
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - arg: the name of the group
+    #    - arg2: the number of the group
+    #    Outputs: adds the user to the given group or returns an error if the group is invalid or in case of
+    #             syntax errors
+    # -------------------------------------------------------------------------------------------------------
     @commands.command(name='join', help='To use the join command, do: $join \'Group\' <Num> \n \
     ( For example: $join Group 0 )', pass_context=True)
     async def join(self, ctx, arg='group', arg2='-1'):
@@ -63,9 +71,17 @@ class Groups(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('To use the join command, do: $join \'Group\' <Num> \n ( For example: $join Group 0 )')
 
-    # -----------------------------------------------------------
-    # Bot command for remove, do: $remove 'Group' <Num>
-    # -----------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------------
+    #    Function: remove(self, ctx, arg='group', arg2='-1')
+    #    Description: removes the user from the given group
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - arg: the name of the group
+    #    - arg2: the number of the group
+    #    Outputs: removes the user from the given group or returns an error if the group is invalid or in
+    #             case of syntax errors
+    # -------------------------------------------------------------------------------------------------------
     @commands.command(name='remove', help='To use the remove command, do: $remove \'Group\' <Num> \n \
     ( For example: $remove Group 0 )', pass_context=True)
     async def remove(self, ctx, arg='group', arg2='-1'):
@@ -112,9 +128,14 @@ class Groups(commands.Cog):
             await ctx.send('To use the remove command, do: $remove \'Group\' <Num> \n \
             ( For example: $remove Group 0 )')
 
-    # -----------------------------------------------------------
-    # Bot command for group, do: $group
-    # -----------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------------
+    #    Function: group(self, ctx)
+    #    Description: prints the list of groups
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    Outputs: prints the list of groups
+    # -------------------------------------------------------------------------------------------------------
     @commands.command(name='group', help='print amount of groups that are full', pass_context=True)
     @commands.dm_only()
     async def group(self, ctx):
@@ -200,9 +221,9 @@ def print_groups(group):
             writer.writerow([key] + group[key])
 
 
-# -----------------------------------------------------------
+# ------------------------------------------------------------
 # Used to load the members from the csv file into a dictionary
-# -----------------------------------------------------------
+# ------------------------------------------------------------
 def load_pool() -> dict:
     dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(dir)
