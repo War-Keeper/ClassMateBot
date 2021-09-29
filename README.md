@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5368008.svg)](https://doi.org/10.5281/zenodo.5368008)
 ![Build Status](https://github.com/War-Keeper/ClassMateBot/actions/workflows/main.yml/badge.svg)
-[![Coverage](/home/runner/work/ClassMateBot/ClassMateBot/data/coverage.svg)
+[![codecov](https://codecov.io/gh/War-Keeper/ClassMateBot/branch/main/graph/badge.svg)](https://codecov.io/gh/War-Keeper/ClassMateBot)
 
 
 ## Basic Overview
