@@ -70,7 +70,7 @@ class Pinning(commands.Cog):
             await ctx.send("{} pinned message(s) has been deleted with tag: {} and description: {}.".format(len(to_remove), str(pin_mes["TAG"]), str(pin_mes["DESCRIPTION"])))
 
     @addMessage.error
-    async def addMessage_error(self, ctx, error):
+    async def deleteMessage_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
                 'To use the unpin command, do: $pin TAGNAME DESCRIPTION \n ( For example: $pin HW HW8 reminder )')
