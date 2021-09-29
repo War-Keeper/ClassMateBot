@@ -69,7 +69,7 @@ class Pinning(commands.Cog):
             json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
             await ctx.send("{} pinned message(s) has been deleted with tag: {} and description: {}.".format(len(to_remove), str(pin_mes["TAG"]), str(pin_mes["DESCRIPTION"])))
 
-    @addMessage.error
+    @deleteMessage.error
     async def deleteMessage_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
@@ -92,6 +92,12 @@ class Pinning(commands.Cog):
                 await ctx.send("Tag: {}, Message Link: {}, Description: {}".format(tagname, pin_mes["LINK"], pin_mes["DESCRIPTION"]))
             else:
                 await ctx.send("No messages found with the given tagname and author combination")
+
+    @retrieveMessages.error
+    async def retrieveMessages_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(
+                'To use the pinnedmessages command, do: $pin TAGNAME \n ( For example: $pin HW )')
 
     ###########################
     #    Function: updatePinnedMessage(self, ctx, tagname: str, new_link: str, *, description: str)
