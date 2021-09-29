@@ -31,11 +31,51 @@ async def test_ping(bot):
 # TODO Test user join messages
 
 
-#
-# @pytest.mark.asyncio
-# async def test_ping(bot):
-#     await dpytest.message("$join group 1")
-#     assert dpytest.verify().message().contains().content("Pong!")
+# ---------------------
+# Tests cogs/groups.py
+# ---------------------
+@pytest.mark.asyncio
+async def test_groupJoin(bot):
+    # Try to join a group we're already in
+    await dpytest.message("$join Group 1")
+    message = dpytest.get_message()
+    if message.content == "You are already in Group 1":
+        await dpytest.message("$remove Group 1")
+        assert dpytest.verify().message().content("You have been removed from Group 1!")
+    else:
+        assert message.content == "You are now in Group 1!"
+    # Try to remove ourselves from a group we're not in
+    await dpytest.message("$remove Group 20")
+    assert dpytest.verify().message().contains().content("You are not in Group 20")
+    # Try to remove ourself from the group
+
+    # For some reason we're not in the group, might be a problem with how dpytest works
+
+    # assert dpytest.verify().message().contains().content("You are not in Group 1")
+
+
+# ------------------------------------
+# Tests cogs/groups.py error handling
+# ------------------------------------
+@pytest.mark.asyncio
+async def test_groupError(bot):
+    # Try to join a group that doesn't exist
+    await dpytest.message("$join Group -1")
+    assert dpytest.verify().message().contains().content('Not a valid group')
+    assert dpytest.verify().message().contains().content(
+        'To use the join command, do: $join \'Group\' <Num> \n ( For example: $join Group 0 )')
+    # Try to remove ourself from an invalid group
+    await(dpytest.message("$remove Group 999"))
+    assert dpytest.verify().message().contains().content('Group 999 is not a valid group')
+    assert dpytest.verify().message().contains().content('To use the remove command, do: $remove \'Group\' <Num> \n \
+            ( For example: $remove Group 0 )')
+    # with pytest.raises(Exception):
+    #     await dpytest.message("$join")
+    #     assert dpytest.verify().message().contains().content(
+    #         'To use the join command, do: $join \'Group\' <Num> \n ( For example: $join Group 0 )')
+    #     assert dpytest.verify().message().contains().content(
+    #         'To use the join command, do: $join \'Group\' <Num> \n ( For example: $join Group 0 )')
+
 
 # -----------------------
 # Tests cogs/deadline.py
@@ -47,7 +87,7 @@ async def test_deadline(bot):
     # assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
     # Test reminders while none have been set
     await dpytest.message("$coursedue CSC505")
-    assert dpytest.verify().message().content("Rejoice..!! You have no pending homeworks for CSC505..!!")
+    assert dpytest.verify().message().contains().content("Rejoice..!! You have no pending homeworks for CSC505..!!")
     # Test setting 1 reminder
     await dpytest.message("$addhw CSC505 DANCE SEP 21 2050 10:00")
     assert dpytest.verify().message().contains().content(
@@ -185,6 +225,8 @@ async def test_verifyError(bot):
     with pytest.raises(Exception):
         await dpytest.message(content="$verify", channel=0)
     # Can only test this currently since dpytest doesn't allow us to test DM'ing
+
+
 # We cannot currently test newComer.py in a meaningful way due to not having a way to DM the test bot directly.
 
 
@@ -198,6 +240,3 @@ async def test_voting(bot):
         await dpytest.message(content="$vote Project 1")
         assert dpytest.verify().message().contains().content(
             "Could not fine the Group you are in, please contact a TA or join with your group number")
-
-
-

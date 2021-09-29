@@ -85,7 +85,7 @@ class Groups(commands.Cog):
             # if member in is the group, then remove them from it
             if member_name in groups[group_num]:
                 groups[group_num].remove(member_name)
-                await ctx.send('You are have been removed from ' + group_num.title() + '!')
+                await ctx.send('You have been removed from ' + group_num.title() + '!')
             # else error message
             else:
                 await ctx.send('You are not in ' + group_num.title())
@@ -96,7 +96,7 @@ class Groups(commands.Cog):
             for key in groups.keys():
                 if member_name in groups[key]:
                     groups[key].remove(member_name)
-                    await ctx.send('You are have been removed from ' + key.title() + '!')
+                    await ctx.send('You are been removed from ' + key.title() + '!')
             print_groups(groups)
 
         # error handling
