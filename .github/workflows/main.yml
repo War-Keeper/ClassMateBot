@@ -31,9 +31,12 @@ jobs:
     - name: Test with pytest
       run: pytest
     - name: Generate coverage
-      run:  coverage run -m pytest
-    - name: Generate coverage badge
-      run: coverage-badge -o data/coverage.svg
+      run:  pytest --cov=./ --cov-report=xml
+    - name: "Upload coverage to Codecov"
+    - uses: codecov/codecov-action@v2
+      with:
+        fail_ci_if_error: true
+ 
     - name: "TODO to Issue"
       uses: "alstr/todo-to-issue-action@v4.2"
       id: "todo"
