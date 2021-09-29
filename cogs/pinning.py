@@ -38,6 +38,11 @@ class Pinning(commands.Cog):
         json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
         await ctx.send("A new message has been pinned with tag: {} and link: {} with a description: {} by {}.".format(tagname, link, description, author))
 
+    @addMessage.error
+    async def addMessage_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('To use the pin command, do: $pin TAGNAME LINK DESCRIPTION \n ( For example: $pin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890813190433292298 HW8 reminder )')
+
     ###########################
     #    Function: deleteMessage(self, ctx, tagname: str, *, description: str)
     #    Description: This command unpins the pinned messages with the provided tagname and description.
@@ -63,6 +68,13 @@ class Pinning(commands.Cog):
         if to_remove:
             json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
             await ctx.send("{} pinned message(s) has been deleted with tag: {} and description: {}.".format(len(to_remove), str(pin_mes["TAG"]), str(pin_mes["DESCRIPTION"])))
+
+    @addMessage.error
+    async def addMessage_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(
+                'To use the unpin command, do: $pin TAGNAME DESCRIPTION \n ( For example: $pin HW HW8 reminder )')
+
 
     ###########################
     #    Function: retrieveMessages(self, ctx, tagname: str)
