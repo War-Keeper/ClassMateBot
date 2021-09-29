@@ -179,3 +179,5 @@ def setup(bot):
     check_files()
     n = Pinning(bot)
     bot.add_cog(n)
+
+# Copyright (c) 2021 War-Keeper

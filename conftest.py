@@ -40,3 +40,5 @@ def pytest_sessionfinish():
         except Exception as e:
             print(f"Error while deleting file {path}: {e}")
     print("\npySession closed successfully")
+
+# Copyright (c) 2021 War-Keeper

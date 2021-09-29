@@ -254,3 +254,5 @@ def print_pool(pools):
 # -----------------------------------------------------------
 def setup(bot):
     bot.add_cog(Groups(bot))
+
+# Copyright (c) 2021 War-Keeper

@@ -93,3 +93,5 @@ async def shutdown(ctx):
 
 # Starts the bot with the current token
 bot.run(TOKEN)
+
+# Copyright (c) 2021 War-Keeper

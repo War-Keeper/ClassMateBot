@@ -370,3 +370,5 @@ def setup(bot):
     loop = asyncio.get_event_loop()
     loop.create_task(n.delete_old_reminders())
     bot.add_cog(n)
+
+# Copyright (c) 2021 War-Keeper

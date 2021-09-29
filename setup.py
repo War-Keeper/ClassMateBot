@@ -15,3 +15,5 @@ setup(
                  'Programming Language :: Python :: 3.9'
                  ]
 )
+
+# Copyright (c) 2021 War-Keeper

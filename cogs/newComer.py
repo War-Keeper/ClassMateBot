@@ -84,3 +84,5 @@ class Helper(commands.Cog):
 # --------------------------------------
 def setup(bot):
     bot.add_cog(Helper(bot))
+
+# Copyright (c) 2021 War-Keeper

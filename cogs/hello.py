@@ -27,3 +27,5 @@ class Helpful(commands.Cog):
 # -------------------------------------
 def setup(bot):
     bot.add_cog(Helpful(bot))
+
+# Copyright (c) 2021 War-Keeper
