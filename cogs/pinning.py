@@ -125,6 +125,11 @@ class Pinning(commands.Cog):
                 else:
                     await ctx.send("No message found with the given tagname, description and author combination")
 
+    @updatePinnedMessage.error
+    async def updatePinnedMessage_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('To use the updatepin command, do: $pin TAGNAME NEW_LINK DESCRIPTION \n ( $updatepin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890814489480531969 HW8 reminder )')
+
 
 def check_folders():
     if not os.path.exists("data/PinMessage"):
