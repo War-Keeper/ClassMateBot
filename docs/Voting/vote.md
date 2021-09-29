@@ -17,3 +17,5 @@ $vote projoect <NUMBER>
 $vote project 0
 ```
 Successful execution of this command will return a message saying you have voted for a project.
+
+![$vote HW](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/vote.gif)

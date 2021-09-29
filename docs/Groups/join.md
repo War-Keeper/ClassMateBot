@@ -18,3 +18,4 @@ $join group 0
 ```
 Successful execution of this command will return a message saying you have joined the group.
 
+![$join HW](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/join.gif)

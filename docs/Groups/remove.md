@@ -19,3 +19,4 @@ $remove
 ```
 Successful execution of this command will return a message saying you have been removed from the group.
 
+![$remove HW](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/remove.gif)

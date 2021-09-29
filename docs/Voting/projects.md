@@ -16,3 +16,4 @@ $projects
 ```
 Successful execution of this command will display the projects and all the groups that have voted for each project.
 
+![$projects HW](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/projects.gif)

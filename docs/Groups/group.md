@@ -17,3 +17,4 @@ $group
 ```
 Successful execution of this command will display the groups and the amount of people in each group.
 
+![$group HW](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/group.gif)

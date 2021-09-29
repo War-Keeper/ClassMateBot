@@ -74,7 +74,7 @@ class Groups(commands.Cog):
         groups = load_groups()
 
         # get the name of the caller
-        member_name = ctx.message.author.display_name
+        member_name = ctx.message.author.display_name.upper()
 
         # get the arguments for the group to join
         group_num = arg.upper() + ' ' + arg2
