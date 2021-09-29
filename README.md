@@ -38,3 +38,6 @@ The next feature is that our Classroom Bot helps the students in providing answe
 Another unique and useful feature of our ClassMateBot is that it helps the students in the process of group making for their projects. Through this feature the bot could help the students to identify other members of the class who have the same requirements and acts as a medium to connect them initially. Afterwards, they can talk to each other in any way possible. This feature is also helpful for times when a person is randomly assigned to a group then the mebers could ask the bot to connect them with the new member and this would not only save time for the students but also, saves effort as many times students do not have their names as their usernames on discord. 
 
 
+## Future Scope
+
+Project 2 and Project 3 user stories and TODO tasks are lockeded in the projects tab. 
