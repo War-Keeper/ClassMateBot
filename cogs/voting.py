@@ -21,7 +21,7 @@ class Voting(commands.Cog):
     @commands.command(name='vote', help='Used for voting for Project 2 and 3, \
     To use the vote command, do: $vote \'Project\' <Num> \n \
     (For example: $vote project 0)', pass_context=True)
-    async def vote(self, ctx,arg='Project', arg2='-1'):
+    async def vote(self, ctx, arg='Project', arg2='-1'):
         # load the groups from the csv
         groups = load_groups()
         # load the projects from the csv
