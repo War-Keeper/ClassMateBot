@@ -38,7 +38,15 @@ class Pinning(commands.Cog):
         json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
         await ctx.send("A new message has been pinned with tag: {} and link: {} with a description: {} by {}.".format(tagname, link, description, author))
 
-    # This command unpins the pinned messages with the provided tagname and description.
+    ###########################
+    #    Function: deleteMessage(self, ctx, tagname: str, *, description: str)
+    #    Description: This command unpins the pinned messages with the provided tagname and description.
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - tagname: the tag used to identify which pinned messages are to be deleted.
+    #    - description: description of the pinned message used to uniquely identify a particular message.
+
     @commands.command(name="unpin", help="Unpin a message by passing the tagname and description of the pinned message")
     async def deleteMessage(self, ctx, tagname: str, *, description: str):
         author = ctx.message.author
