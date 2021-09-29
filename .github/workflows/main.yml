@@ -33,7 +33,7 @@ jobs:
     - name: Generate coverage
       run:  coverage run -m pytest
     - name: Generate coverage badge
-      run: coverage-badge -o coverage.svg
+      run: coverage-badge
     - name: "TODO to Issue"
       uses: "alstr/todo-to-issue-action@v4.2"
       id: "todo"
