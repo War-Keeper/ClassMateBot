@@ -19,7 +19,16 @@ class Pinning(commands.Cog):
     async def helpful3(self, ctx):
         await ctx.send(f"Pong! My ping currently is {round(self.bot.latency * 1000)}ms")
 
-    # Used to pin a message by the user. The message gets stored in a JSON file in the required format.
+    ###########################
+    #    Function: addMessage(self, ctx, tagname: str, link: str, *, description: str)
+    #    Description: Used to pin a message by the user. The message gets stored in a JSON file in the required format.
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - tagname: a tag given by the user to their pinned message.
+    #    - link: link of the pinned message.
+    #    - description: description of the pinned message given by the user.
+
     @commands.command(name="pin", help="Pin a message by adding a tagname (single word), link and a description(can be multi word). EX: $pin Homework Link Resources for HW2")
     async def addMessage(self, ctx, tagname: str, link: str, *, description: str):
         author = ctx.message.author
