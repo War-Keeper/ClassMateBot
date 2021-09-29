@@ -40,4 +40,4 @@ Another unique and useful feature of our ClassMateBot is that it helps the stude
 
 ## Future Scope
 
-Project 2 and Project 3 user stories and TODO tasks are lockeded in the projects tab. 
+Project 2 and Project 3 user stories and TODO tasks are lockeded in the Projects tab. 
