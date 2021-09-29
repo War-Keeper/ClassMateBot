@@ -64,7 +64,14 @@ class Pinning(commands.Cog):
             json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
             await ctx.send("{} pinned message(s) has been deleted with tag: {} and description: {}.".format(len(to_remove), str(pin_mes["TAG"]), str(pin_mes["DESCRIPTION"])))
 
-    # This command is used to retrieve all the pinned messages under a given tagname by a particular user
+    ###########################
+    #    Function: retrieveMessages(self, ctx, tagname: str)
+    #    Description: This command is used to retrieve all the pinned messages under a given tagname by a particular user.
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - tagname: the tag used to identify which pinned messages are to be retrieved.
+
     @commands.command(name="pinnedmessages", help="Retrieve the pinned messages by passing the tagname")
     async def retrieveMessages(self, ctx, tagname: str):
         author = ctx.message.author
