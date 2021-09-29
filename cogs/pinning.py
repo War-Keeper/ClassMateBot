@@ -81,7 +81,16 @@ class Pinning(commands.Cog):
             else:
                 await ctx.send("No messages found with the given tagname and author combination")
 
-    # This is used to update the link of a pinned message with a given tagname and description.
+    ###########################
+    #    Function: updatePinnedMessage(self, ctx, tagname: str, new_link: str, *, description: str)
+    #    Description: This is used to update the link of a pinned message with a given tagname and description.
+    #    Inputs:
+    #    - self: used to access parameters passed to the class through the constructor
+    #    - ctx: used to access the values passed through the current context
+    #    - tagname: a tag given by the user to their pinned message.
+    #    - new_link: new link which is to added to the pinned message in place of the old link.
+    #    - description: description of the pinned message given by the user.
+
     @commands.command(name="updatepin", help="Update a previously pinned message by passing the tagname, new link and old description in the same order")
     async def updatePinnedMessage(self, ctx, tagname: str, new_link: str, *, description: str):
         author = ctx.message.author
