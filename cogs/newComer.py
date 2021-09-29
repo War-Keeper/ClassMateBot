@@ -5,19 +5,23 @@ import os
 import csv
 import random
 
+
+# ---------------------------------------------------------------------------------------
+# Contains commands for member verification, which is handled with direct DMs to the bot
+# ---------------------------------------------------------------------------------------
 class Helper(commands.Cog):
     GUILD = os.getenv("GUILD")
     UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
     VERIFIED_MEMBER_ROLE = os.getenv("VERIFIED_MEMBER_ROLE")
-    path="data\welcome"
+    path = "data/server_data/welcome"
 
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="helpful00", help="purely a test function")
-    async def helpful00(self, ctx):
-        await ctx.send(f"Pong! My ping currently is {round(self.bot.latency * 1000)}ms")
-
+    # --------------------------------------------------------------------------------------------------
+    # Verify command, gives the user the verified role if they don't already have it, which can be used
+    # to control individual permissions
+    # --------------------------------------------------------------------------------------------------
     @commands.dm_only()
     @commands.command(
         name="verify",
@@ -30,34 +34,47 @@ class Helper(commands.Cog):
             if g.name == self.GUILD:
                 guild = g
         member = guild.get_member(ctx.message.author.id)
-        unverified = discord.utils.get(guild.roles, name=self.UNVERIFIED_ROLE_NAME)  # finds the unverified role in the guild
+        unverified = discord.utils.get(
+            guild.roles, name=self.UNVERIFIED_ROLE_NAME
+        )  # finds the unverified role in the guild
         if (unverified in member.roles):  # checks if the user running the command has the unveirifed role
             if name == None:
                 await ctx.send(
                     "To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )"
                 )
             else:
-                verified = discord.utils.get(guild.roles, name=self.VERIFIED_MEMBER_ROLE)  # finds the verified role in the guild
-
-                # storing discord name and actual name in name_mapping.csv
-                with open("data/server_data/name_mapping.csv", mode="a", newline="") as outfile:  
+                verified = discord.utils.get(
+                    guild.roles, name=self.VERIFIED_MEMBER_ROLE
+                )  # finds the verified role in the guild
+                with open(
+                        "data/server_data/name_mapping.csv", mode="a", newline=""
+                ) as outfile:  # storing discord name and actual name in name_mapping.csv
                     writer = csv.writer(outfile)
                     writer.writerow([member.name, name])
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
-                await ctx.send("Thank you for verifying! You can start using " + self.GUILD + "!")
-                embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
-                welcome_images = os.listdir(self.path)
-                selected_image = random.choice(welcome_images) # randomly choosing image from welcome directory
-                file=discord.File(self.path + "\\" + selected_image)
-                embed.set_image(url = "attachment://"+ selected_image) # Embedding the image
-                await member.send(file=file, embed=embed)
+                await ctx.send("Thank you for verifying! You can start using " + self.GUILD)
+                # embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                # welcome_images = os.listdir(self.path)
+                # selected_image = random.choice(welcome_images)
+                # # embed.set_thumbnail(selected_image)
+                # await member.send(discord.File(selected_image))
+                embed = discord.Embed(
+                    description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                # welcome_images = os.listdir(self.path)
+                # selected_image = random.choice(welcome_images)
+                # embed.set_thumbnail(selected_image)
+                await member.send(embed=embed)
 
         else:  # user has verified role
             await ctx.send("You are already verified!")
-            embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+            embed = discord.Embed(
+                description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
             await member.send(embed=embed)
 
 
+# --------------------------------------
+# add the file to the bot's cog system
+# --------------------------------------
 def setup(bot):
     bot.add_cog(Helper(bot))

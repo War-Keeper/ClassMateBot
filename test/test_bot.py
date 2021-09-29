@@ -1,41 +1,45 @@
-# Main file for bot pytest actions. Uses dpytest to test bot activity on a simulated server with simulated members
 import discord
 import os
 from datetime import datetime, timedelta
-
 import discord.ext.test as dpytest
 from dotenv import load_dotenv
-
 import pytest
 
 
-# TODO Test user join messages
+# ------------------------------------------------------------------------------------------------------
+# Main file bot testing. Uses dpytest to test bot activity on a simulated server with simulated members
+# ------------------------------------------------------------------------------------------------------
+
+# --------------------
 # Tests cogs/hello.py
+# --------------------
 @pytest.mark.asyncio
 async def test_hello(bot):
     await dpytest.message("$hello")
     assert dpytest.verify().message().content("Hello World!")
 
 
+# -------------------
 # Tests cogs/ping.py
+# -------------------
 @pytest.mark.asyncio
 async def test_ping(bot):
     await dpytest.message("$ping")
     assert dpytest.verify().message().contains().content("Pong!")
 
 
-# Tests on_member_join events
-@pytest.mark.asyncio
-async def test_join(bot):
-    config = dpytest.RunnerConfig
-    await dpytest.member_join(name="Bongus1")
-    await dpytest.member_join(name="Bongus2")
-    print(f'\n{bot.guilds}\n')
-    print(f'\n{dpytest.RunnerConfig.members}\n')
-    # await dpytest.message("$join group 1")
+# TODO Test user join messages
 
 
+#
+# @pytest.mark.asyncio
+# async def test_ping(bot):
+#     await dpytest.message("$join group 1")
+#     assert dpytest.verify().message().contains().content("Pong!")
+
+# -----------------------
 # Tests cogs/deadline.py
+# -----------------------
 @pytest.mark.asyncio
 async def test_deadline(bot):
     # Clear our reminders: Only if testing fails and leaves a reminders.JSON file with values behind
@@ -65,7 +69,9 @@ async def test_deadline(bot):
     assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
 
 
+# --------------------------------
 # Test listing multiple reminders
+# --------------------------------
 @pytest.mark.asyncio
 async def test_listreminders(bot):
     # Test listing multiple reminders
@@ -96,6 +102,9 @@ async def test_listreminders(bot):
     # Tests cogs/deadline.py
 
 
+# ------------------------------
+# Tests reminders due this week
+# ------------------------------
 @pytest.mark.asyncio
 async def test_duethisweek(bot):
     # Try adding a reminder due in an hour
@@ -112,7 +121,9 @@ async def test_duethisweek(bot):
     assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
 
 
+# --------------------
 # Tests cogs/pinning
+# --------------------
 @pytest.mark.asyncio
 async def test_pinning(bot):
     # Test pinning a message
@@ -126,7 +137,9 @@ async def test_pinning(bot):
         "A new message has been pinned with tag: TestMessage and link: www.discord.com with a description: this is also a test")
 
 
-# Tests cogs/pinning
+# ----------------
+# Tests unpinning
+# ----------------
 @pytest.mark.asyncio
 async def test_unpinning(bot):
     # Test pinning a message
@@ -150,18 +163,41 @@ async def test_unpinning(bot):
     assert dpytest.verify().message().contains().content(
         "A pinned message has been updated with tag: TestMessage2 and new link: www.zoom.com")
 
-# Tests cogs/newComer
+
+# ----------------------
+# Tests invalid pinning
+# ----------------------
 @pytest.mark.asyncio
-async def test_unpinning(bot):
-    print(dpytest.get_config())
+async def test_pinError(bot):
+    # Tests pinning without a message, will fail
+    with pytest.raises(Exception):
+        await dpytest.message("$pin")
+        assert dpytest.verify().message().contains().content(
+            'To use the pin command, do: $pin TAGNAME LINK DESCRIPTION \n ( For example: $pin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890813190433292298 HW8 reminder )')
+
+
+# --------------------
+# Tests cogs/newComer
+# --------------------
+@pytest.mark.asyncio
+async def test_verifyError(bot):
     # Test verification, should raise exception since channel isn't private
     with pytest.raises(Exception):
         await dpytest.message(content="$verify", channel=0)
     # Can only test this currently since dpytest doesn't allow us to test DM'ing
+# We cannot currently test newComer.py in a meaningful way due to not having a way to DM the test bot directly.
 
+
+# --------------------
 # Tests cogs/newComer
+# --------------------
 @pytest.mark.asyncio
 async def test_voting(bot):
     # Test voting, should raise an exception since we aren't in a group
     with pytest.raises(Exception):
         await dpytest.message(content="$vote Project 1")
+        assert dpytest.verify().message().contains().content(
+            "Could not fine the Group you are in, please contact a TA or join with your group number")
+
+
+

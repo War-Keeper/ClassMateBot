@@ -1,8 +1,9 @@
-
 import csv
 import discord
 from discord.ext import commands
 import os
+
+
 # -----------------------------------------------------------
 # This File contains commands for voting on projects,
 # displaying which groups have signed up for which project
@@ -100,6 +101,8 @@ class Voting(commands.Cog):
                 else:
                     overall += key + ': \n'
         await ctx.send(overall)
+
+
 # -----------------------------------------------------------
 # Used to load the Project from the csv file into a dictionary
 # -----------------------------------------------------------
@@ -117,6 +120,7 @@ def load_projects() -> dict:
 
     return student_pools
 
+
 # -----------------------------------------------------------
 # Used to print the Projects to the csv file
 # -----------------------------------------------------------
@@ -131,6 +135,7 @@ def print_projects(projects):
             while len(projects[key]) < 6:
                 projects[key].append(None)
             writer.writerow([key] + projects[key])
+
 
 # -----------------------------------------------------------
 # Used to load the groups from the csv file into a dictionary
@@ -150,6 +155,7 @@ def load_groups() -> dict:
 
     return group
 
+
 # -----------------------------------------------------------
 # Used to print the groups to the csv file
 # -----------------------------------------------------------
@@ -160,6 +166,7 @@ def print_groups(group):
             while len(group[key]) < 6:
                 group[key].append(None)
             writer.writerow([key] + group[key])
+
 
 # -----------------------------------------------------------
 # add the file to the bot's cog system

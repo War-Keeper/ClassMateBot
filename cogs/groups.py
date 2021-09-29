@@ -1,8 +1,9 @@
-
 import discord
 from discord.ext import commands
 import os
 import csv
+
+
 # -----------------------------------------------------------
 # This File contains commands for joining a group, leaving a group,
 # and displaying which groups are available
@@ -163,6 +164,7 @@ class Groups(commands.Cog):
     #
     #     print_pool(student_pool)
 
+
 # -----------------------------------------------------------
 # Used to load the groups from the csv file into a dictionary
 # -----------------------------------------------------------
@@ -181,6 +183,7 @@ def load_groups() -> dict:
 
     return group
 
+
 # -----------------------------------------------------------
 # Used to print the groups to the csv file
 # -----------------------------------------------------------
@@ -196,6 +199,7 @@ def print_groups(group):
                 group[key].append(None)
             writer.writerow([key] + group[key])
 
+
 # -----------------------------------------------------------
 # Used to load the members from the csv file into a dictionary
 # -----------------------------------------------------------
@@ -209,6 +213,7 @@ def load_pool() -> dict:
         student_pools = {rows[0].upper(): rows[1].upper() for rows in reader}
     return student_pools
 
+
 # -----------------------------------------------------------
 # Used to print the members to the csv file
 # -----------------------------------------------------------
@@ -221,6 +226,7 @@ def print_pool(pools):
         writer = csv.writer(outfile)
         for key, value in pools.items():
             writer.writerow([key, value])
+
 
 # -----------------------------------------------------------
 # add the file to the bot's cog system
