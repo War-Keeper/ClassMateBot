@@ -66,15 +66,6 @@ class Helper(commands.Cog):
                 file=discord.File(self.path + "\\" + selected_image)
                 embed.set_image(url = "attachment://"+ selected_image) # Embedding the image
                 await member.send(file=file, embed=embed)
-                # embed.set_thumbnail(selected_image)
-                # await member.send(discord.File(selected_image))
-                # embed = discord.Embed(
-                #     description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
-                # welcome_images = os.listdir(self.path)
-                # selected_image = random.choice(welcome_images)
-                # embed.set_thumbnail(selected_image)
-                # await member.send(embed=embed)
-
         else:  # user has verified role
             await ctx.send("You are already verified!")
             embed = discord.Embed(
