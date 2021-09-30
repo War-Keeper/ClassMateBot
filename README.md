@@ -9,27 +9,29 @@
 [![codecov](https://codecov.io/gh/War-Keeper/ClassMateBot/branch/main/graph/badge.svg)](https://codecov.io/gh/War-Keeper/ClassMateBot)
 
 <p align="center">
-  <a href="#installation">Installation</a>
+  <a href="#dart-basic-overview">Basic Overview</a>
   ::
-  <a href="#basic-overview">Basic Overview</a>
+  <a href="#orange_book-description">Description</a>
   ::
-  <a href="#description">Description</a>
+  <a href="#arrow_down-installation">Installation</a>
   ::
-  <a href="#future-scope">Future Scope</a>
+  <a href="#computer-commands">Commands</a>
   ::
-  <a href="#contributors">Contributors</a>
+  <a href="#earth_americas-future-scope">Future Scope</a>
+  ::
+  <a href="#pencil2-contributors">Contributors</a>
   
 </p>
 
 ---
 
-## Basic Overview
+## :dart: Basic Overview
 
 This project helps to improve the life of students, TAs and teachers by automating many mundane tasks which are sometimes done manually. ClassMateBot is a discord bot made in Python and could be used for any discord channel.
 
 ---
 
-## Description
+## :orange_book: Description
 
 There are three basic user groups in a ClassMateBot, which are Students, Professor and TAs. Some basic tasks for the bot for the students user group should be automating the task of group making for projects or homewroks, Projection deadline reminders, etc. For TAs it is taking up polls, or answering FAQs asked by the students. 
 
@@ -63,7 +65,7 @@ Another unique and useful feature of our ClassMateBot is that it helps the stude
 ---
 
 
-## Installation
+## :arrow_down: Installation
 
 1. Clone the Github repository to a desired location on your computer. You will need [git](https://git-scm.com/) to be preinstalled on your machine. Once the repository is cloned, you will then ```cd``` into the local repository.
 ```
@@ -81,63 +83,63 @@ python3 bot.py
 
 ---
 
-## Commands
+## :computer: Commands
 For the newComer.py file
 
-[$verify command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Verification/verify.md)
+:open_file_folder: [$verify command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Verification/verify.md)
 
 For the voting.py file
 
-[$projects command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Voting/projects.md)
+:open_file_folder: [$projects command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Voting/projects.md)
 
-[$vote command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Voting/vote.md)
+:open_file_folder: [$vote command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Voting/vote.md)
 
 For the deadline.py file
 
-[$add_homework command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/add_homework.md)
+:open_file_folder: [$add_homework command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/add_homework.md)
 
-[$change_reminder_due_date command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/change_reminder_due_date.md)
+:open_file_folder: [$change_reminder_due_date command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/change_reminder_due_date.md)
 
-[$clear_all_reminders command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/clear_all_reminders.md)
+:open_file_folder: [$clear_all_reminders command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/clear_all_reminders.md)
 
-[$course_due command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/course_due.md)
+:open_file_folder: [$course_due command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/course_due.md)
 
-[$delete_reminder command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/delete_reminder.md)
+:open_file_folder: [$delete_reminder command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/delete_reminder.md)
 
-[$due_this_week command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/due_this_week.md)
+:open_file_folder: [$due_this_week command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/due_this_week.md)
 
-[$due_today command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/due_today.md)
+:open_file_folder: [$due_today command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/due_today.md)
 
-[$list_reminders command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/list_reminders.md)
+:open_file_folder: [$list_reminders command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/list_reminders.md)
 
 For the pinning.py file
 
-[$pin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/pin.md)
+:open_file_folder: [$pin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/pin.md)
 
-[$unpin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/unpin.md)
+:open_file_folder: [$unpin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/unpin.md)
 
-[$pinnedmessages command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/pinnedmessages.md)
+:open_file_folder: [$pinnedmessages command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/pinnedmessages.md)
 
-[$updatepin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/updatepin.md)
+:open_file_folder: [$updatepin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/updatepin.md)
 
 For the groups.py file
 
-[$group command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/group.md)
+:open_file_folder: [$group command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/group.md)
 
-[$join command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/join.md)
+:open_file_folder: [$join command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/join.md)
 
-[$remove command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/remove.md)
+:open_file_folder: [$remove command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/remove.md)
 
 
 ---
 
-## Future Scope
+## :earth_americas: Future Scope
 
 Project 2 and Project 3 user stories and TODO tasks are located in the Projects tab. 
 
 ---
 
-## Contributors
+## :pencil2: Contributors
 
 <table>
   <tr>
