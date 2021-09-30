@@ -53,7 +53,7 @@ def setup(bot):
 ```
 For more information on how to use cogs, refer to the [Cogs Page](https://discordpy.readthedocs.io/en/stable/ext/commands/cogs.html)
 
-For more the API of discord.py you can use the [API Reference Page](https://discordpy.readthedocs.io/en/stable/api.html)
+For more information on the API of discord.py you can use the [API Reference Page](https://discordpy.readthedocs.io/en/stable/api.html)
 
 For general Knowledge of discord.py use the [Documentation Page](https://discordpy.readthedocs.io/en/latest/index.html)
 ## Reporting Bugs
