@@ -74,7 +74,7 @@ cd War-Keeper
 ```
 pip install -r requirements.txt
 ```
-4. Once all the requirements are installed, you will have to ```cd``` into the ```src``` folder. Once in the ```src``` folder, use the python command to run the ```bot.py``` file.
+4. Once all the requirements are installed, use the python command to run the ```bot.py``` file.
 ```
 cd src
 python3 bot.py 
