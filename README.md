@@ -27,6 +27,10 @@
 
 This project helps to improve the life of students, TAs and teachers by automating many mundane tasks which are sometimes done manually. ClassMateBot is a discord bot made in Python and could be used for any discord channel.
 
+
+>**Centralized:** You don't have to use different apps to get all things done.  
+>**Easy to use:** Requires writing few basic commands to perform coplex operations  
+>**Fast:** Provides instant results for all your queries.
 ---
 
 ## Description
