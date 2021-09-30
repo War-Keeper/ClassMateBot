@@ -9,11 +9,11 @@
 [![codecov](https://codecov.io/gh/War-Keeper/ClassMateBot/branch/main/graph/badge.svg)](https://codecov.io/gh/War-Keeper/ClassMateBot)
 
 <p align="center">
+  <a href="#installation">Installation</a>
+  ::
   <a href="#basic-overview">Basic Overview</a>
   ::
   <a href="#description">Description</a>
-  ::
-  <a href="#examples"> Examples </a>
   ::
   <a href="#future-scope">Future Scope</a>
   ::
@@ -23,6 +23,24 @@
 
 ---
 
+## Installation
+
+1. Clone the Github repository to a desired location on your computer. You will need [git](https://git-scm.com/) to be preinstalled on your machine. Once the repository is cloned, you will then ```cd``` into the local repository.
+```
+git clone https://github.com/secheaper/slash.git
+cd slash
+```
+2. This project uses Python 3, so make sure that [Python](https://www.python.org/downloads/) and [Pip](https://pip.pypa.io/en/stable/installation/) are preinstalled. All requirements of the project are listed in the ```requirements.txt``` file. Use pip to install all of those.
+```
+pip install -r requirements.txt
+```
+4. Once all the requirements are installed, you will have to ```cd``` into the ```src``` folder. Once in the ```src``` folder, use the python command to run the ```slash.py``` file.
+```
+cd src
+python3 slash.py --search "philips hue"
+```
+
+---
 ## Basic Overview
 
 This project helps to improve the life of students, TAs and teachers by automating many mundane tasks which are sometimes done manually. ClassMateBot is a discord bot made in Python and could be used for any discord channel.
