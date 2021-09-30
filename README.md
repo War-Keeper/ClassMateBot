@@ -4,14 +4,30 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ![Python](https://img.shields.io/badge/python-v3.6+-yellow.svg)
 [![License](https://img.shields.io/badge/license-MIT-orange.svg)](https://opensource.org/licenses/MIT)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5368008.svg)](https://doi.org/10.5281/zenodo.5368008)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5539956.svg)](https://doi.org/10.5281/zenodo.5539956)
 ![Build Status](https://github.com/War-Keeper/ClassMateBot/actions/workflows/main.yml/badge.svg)
 [![codecov](https://codecov.io/gh/War-Keeper/ClassMateBot/branch/main/graph/badge.svg)](https://codecov.io/gh/War-Keeper/ClassMateBot)
 
+<p align="center">
+  <a href="#basic-overview">Basic Overview</a>
+  ::
+  <a href="#description">Description</a>
+  ::
+  <a href="#examples"> Examples </a>
+  ::
+  <a href="#future-scope">Future Scope</a>
+  ::
+  <a href="#contributors">Contributors</a>
+  
+</p>
+
+---
 
 ## Basic Overview
 
 This project helps to improve the life of students, TAs and teachers by automating many mundane tasks which are sometimes done manually. ClassMateBot is a discord bot made in Python and could be used for any discord channel.
+
+---
 
 ## Description
 
@@ -20,7 +36,9 @@ There are three basic user groups in a ClassMateBot, which are Students, Profess
 
 Our ClassMateBot focuses on the student side of the discord channel, i.e. currently it focuses on the problems faced by the students while using these discord channels.
 
-The user stories covered here would be more concerned about the activities for the channel for Software Engineering class in North Carolina State University for the Fall 2021 semester. 
+The user stories covered here would be more concerned about the activities for the channel for Software Engineering class in North Carolina State University for the Fall 2021 semester.
+
+---
 
 ### 1 - Project Voting
 The most important task in the upcoming semester that the bot automates is Project Voting which takes place at the end of the month of September and October. Our ClassMateBot allows the student to vote for a particular project which they would like to work on in the coming cycle. This task if done manually could be tedious as the students would have to wait for the TAs or Professor to announce which project they would be getting if voting is done manually. But the bot automates this process and would give out the results as soon as all the students have voted for their choices.
@@ -37,7 +55,27 @@ The next feature is that our Classroom Bot helps the students in providing answe
 ### 5 - Group Creation and Inter-group Communication
 Another unique and useful feature of our ClassMateBot is that it helps the students in the process of group making for their projects. Through this feature the bot could help the students to identify other members of the class who have the same requirements and acts as a medium to connect them initially. Afterwards, they can talk to each other in any way possible. This feature is also helpful for times when a person is randomly assigned to a group then the mebers could ask the bot to connect them with the new member and this would not only save time for the students but also, saves effort as many times students do not have their names as their usernames on discord. 
 
+---
+
+## Examples
+
+
+---
 
 ## Future Scope
 
 Project 2 and Project 3 user stories and TODO tasks are lockeded in the Projects tab. 
+
+---
+
+## Contributors
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/War-Keeper"><img src="https://avatars.githubusercontent.com/u/87688584?v=4" width="75px;" alt=""/><br /><sub><b>Chaitanya Patel</b></sub></a></td>
+    <td align="center"><a href="https://github.com/wevanbrown"><img src="https://avatars.githubusercontent.com/u/89553353?v=4" width="75px;" alt=""/><br /><sub><b>Evan Brown</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/kunwarvidhan"><img src="https://avatars.githubusercontent.com/u/51852048?v=4" width="75px;" alt=""/><br /><sub><b>Kunwar Vidhan</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/sunil1511"><img src="https://avatars.githubusercontent.com/u/43478410?v=4" width="75px;" alt=""/><br /><sub><b>Sunil Upare</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/salvisumedh2396"><img src="https://avatars.githubusercontent.com/u/72020618?s=96&v=4" width="75px;" alt=""/><br /><sub><b>Sumedh Salvi</b></sub></a><br /></td>
+  </tr>
+</table>
