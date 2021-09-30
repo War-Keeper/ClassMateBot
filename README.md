@@ -23,24 +23,6 @@
 
 ---
 
-## Installation
-
-1. Clone the Github repository to a desired location on your computer. You will need [git](https://git-scm.com/) to be preinstalled on your machine. Once the repository is cloned, you will then ```cd``` into the local repository.
-```
-git clone https://github.com/secheaper/slash.git
-cd slash
-```
-2. This project uses Python 3, so make sure that [Python](https://www.python.org/downloads/) and [Pip](https://pip.pypa.io/en/stable/installation/) are preinstalled. All requirements of the project are listed in the ```requirements.txt``` file. Use pip to install all of those.
-```
-pip install -r requirements.txt
-```
-4. Once all the requirements are installed, you will have to ```cd``` into the ```src``` folder. Once in the ```src``` folder, use the python command to run the ```slash.py``` file.
-```
-cd src
-python3 slash.py --search "philips hue"
-```
-
----
 ## Basic Overview
 
 This project helps to improve the life of students, TAs and teachers by automating many mundane tasks which are sometimes done manually. ClassMateBot is a discord bot made in Python and could be used for any discord channel.
@@ -80,10 +62,64 @@ Another unique and useful feature of our ClassMateBot is that it helps the stude
 
 ---
 
+
+## Installation
+
+1. Clone the Github repository to a desired location on your computer. You will need [git](https://git-scm.com/) to be preinstalled on your machine. Once the repository is cloned, you will then ```cd``` into the local repository.
+```
+git clone https://github.com/War-Keeper/ClassMateBot.git
+cd War-Keeper
+```
+2. This project uses Python 3, so make sure that [Python](https://www.python.org/downloads/) and [Pip](https://pip.pypa.io/en/stable/installation/) are preinstalled. All requirements of the project are listed in the ```requirements.txt``` file. Use pip to install all of those.
+```
+pip install -r requirements.txt
+```
+4. Once all the requirements are installed, you will have to ```cd``` into the ```src``` folder. Once in the ```src``` folder, use the python command to run the ```bot.py``` file.
+```
+cd src
+python3 bot.py 
+```
+
+---
+
 ## Commands
 For the newComer.py file
 
 [$verify command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Verification/verify.md)
+
+For the voting.py file
+
+[$projects command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Voting/projects.md)
+
+[$vote command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Voting/vote.md)
+
+For the deadline.py file
+
+[$add_homework command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/add_homework.md)
+
+[$change_reminder_due_date command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/change_reminder_due_date.md)
+
+[$clear_all_reminders command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/clear_all_reminders.md)
+
+[$course_due command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/course_due.md)
+
+[$delete_reminder command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/delete_reminder.md)
+
+[$due_this_week command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/due_this_week.md)
+
+[$due_today command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/due_today.md)
+
+[$list_reminders command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Reminders/list_reminders.md)
+
+For the pinning.py file
+
+[$pin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/pin.md)
+
+[$unpin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/unpin.md)
+
+[$pinnedmessages command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/pinnedmessages.md)
+
+[$updatepin command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/PinMessage/updatepin.md)
 
 For the groups.py file
 
