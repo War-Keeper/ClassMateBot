@@ -134,7 +134,7 @@ For the groups.py file
 
 ## Future Scope
 
-Project 2 and Project 3 user stories and TODO tasks are lockeded in the Projects tab. 
+Project 2 and Project 3 user stories and TODO tasks are located in the Projects tab. 
 
 ---
 
