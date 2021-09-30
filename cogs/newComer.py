@@ -1,4 +1,3 @@
-# TODO assigning member verified role and intro message from bot to new students with important messages and links
 import discord
 from discord.ext import commands
 import os
@@ -13,7 +12,7 @@ class Helper(commands.Cog):
     GUILD = os.getenv("GUILD")
     UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
     VERIFIED_MEMBER_ROLE = os.getenv("VERIFIED_MEMBER_ROLE")
-    path = "data/welcome"
+    path = os.path.join("data", "welcome")
 
     def __init__(self, bot):
         self.bot = bot
@@ -36,14 +35,18 @@ class Helper(commands.Cog):
     )
     async def verify(self, ctx, *, name: str = None):
         guild = None
-        for g in self.bot.guilds: # finding guild using guild name
+        for g in self.bot.guilds:  # finding guild using guild name
             if g.name == self.GUILD:
                 guild = g
-        member = guild.get_member(ctx.message.author.id) # finding member using member id
+        member = guild.get_member(
+            ctx.message.author.id
+        )  # finding member using member id
         unverified = discord.utils.get(
             guild.roles, name=self.UNVERIFIED_ROLE_NAME
         )  # finds the unverified role in the guild
-        if (unverified in member.roles):  # checks if the user running the command has the unveirifed role
+        if (
+            unverified in member.roles
+        ):  # checks if the user running the command has the unveirifed role
             if name == None:
                 await ctx.send(
                     "To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )"
@@ -53,23 +56,30 @@ class Helper(commands.Cog):
                     guild.roles, name=self.VERIFIED_MEMBER_ROLE
                 )  # finds the verified role in the guild
                 with open(
-                        "data/server_data/name_mapping.csv", mode="a", newline=""
+                    "data/server_data/name_mapping.csv", mode="a", newline=""
                 ) as outfile:  # storing discord name and actual name in name_mapping.csv
                     writer = csv.writer(outfile)
                     writer.writerow([member.name, name])
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
-                await ctx.send("Thank you for verifying! You can start using " + self.GUILD + "!")
-                embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                await ctx.send(
+                    "Thank you for verifying! You can start using " + self.GUILD + "!"
+                )
+                embed = discord.Embed(
+                    description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
+                )
                 welcome_images = os.listdir(self.path)
                 selected_image = random.choice(welcome_images)
-                file=discord.File(self.path + "\\" + selected_image)
-                embed.set_image(url = "attachment://"+ selected_image) # Embedding the image
+                file = discord.File(os.path.join(self.path, selected_image))
+                embed.set_image(
+                    url="attachment://" + selected_image
+                )  # Embedding the image
                 await member.send(file=file, embed=embed)
         else:  # user has verified role
             await ctx.send("You are already verified!")
             embed = discord.Embed(
-                description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
+            )
             await member.send(embed=embed)
 
 
@@ -78,5 +88,6 @@ class Helper(commands.Cog):
 # --------------------------------------
 def setup(bot):
     bot.add_cog(Helper(bot))
+
 
 # Copyright (c) 2021 War-Keeper
