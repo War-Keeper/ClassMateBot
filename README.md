@@ -41,7 +41,7 @@ The user stories covered here would be more concerned about the activities for t
 ---
 
 ### 1 - Student Verification
-One of the necessary condition of joining a discord channel should be that the user is a part of the class or group that they are joining. To check this we have added an extra layer of protection by verifying that the new joining user is a student of this class and that they are authorized to join the group. To do this we first assign the non-verified role to the new comer and then ask them to verify them using $verify command. If that goes through the member is assigned a student role and has full access to the server resources. A little example is provided below.
+Once the new member joins the server, before giving them the access to the channels there is a need to get the real full name of the memeber to map it with the discord nick name. This mapping can later be used for group creation, voting and so on. To do this we first assign the unverified role to the new comer and then ask them to verify their identity using $verify command. If that goes through the member is assigned a student role and has full access to the server resources. The bot then welcomes the member and also provides important links related to the course. A little example is provided below.
 ![$verify Jane Doe](https://github.com/War-Keeper/ClassMateBot/blob/main/data/media/verify.gif)
 
 ### 2 - Project Voting
