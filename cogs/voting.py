@@ -1,3 +1,5 @@
+# Copyright (c) 2021 War-Keeper
+
 import csv
 import discord
 from discord.ext import commands
@@ -187,4 +189,4 @@ def print_groups(group):
 def setup(bot):
     bot.add_cog(Voting(bot))
 
-# Copyright (c) 2021 War-Keeper
+

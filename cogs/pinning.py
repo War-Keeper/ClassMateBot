@@ -1,4 +1,5 @@
 # TODO privately pin a message based on copying a message link from a channel
+# Copyright (c) 2021 War-Keeper
 # This functionality lets the students pin the messages they want to.
 # The bot personally pins the messages, i.e. the user can only see his pinned messages and not of others.
 # The messages could be arranged on the basis of tags which the user can himself/herself give to the messages.
@@ -180,4 +181,4 @@ def setup(bot):
     n = Pinning(bot)
     bot.add_cog(n)
 
-# Copyright (c) 2021 War-Keeper
+
