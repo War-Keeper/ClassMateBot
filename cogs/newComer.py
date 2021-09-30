@@ -1,4 +1,4 @@
-# TODO intro message from bot to new students with important messages and links
+# TODO assigning member verified role and intro message from bot to new students with important messages and links
 import discord
 from discord.ext import commands
 import os
