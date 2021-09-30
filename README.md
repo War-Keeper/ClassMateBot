@@ -65,9 +65,14 @@ Another unique and useful feature of our ClassMateBot is that it helps the stude
 ## Commands
 For the newComer.py file
 
+[$verify command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Verification/verify.md)
+
 For the groups.py file
+
 [$group command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/group.md)
+
 [$join command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/join.md)
+
 [$remove command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/remove.md)
 
 
