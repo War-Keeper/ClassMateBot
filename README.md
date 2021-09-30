@@ -62,7 +62,8 @@ Another unique and useful feature of our ClassMateBot is that it helps the stude
 
 ---
 
-## Examples
+## Commands
+[$group command](https://github.com/War-Keeper/ClassMateBot/blob/main/docs/Groups/group.md)
 
 
 ---
