@@ -134,8 +134,7 @@ For the groups.py file
 ---
 
 ## :earth_americas: Future Scope
-
-Project 2 and Project 3 user stories and TODO tasks are located in the Projects tab. 
+[Project 2](https://github.com/War-Keeper/ClassMateBot/projects/2) and [Project 3](https://github.com/War-Keeper/ClassMateBot/projects/3) user stories and TODO tasks are located in the Projects tab. 
 
 ---
 
