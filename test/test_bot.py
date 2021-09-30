@@ -1,3 +1,4 @@
+# Copyright (c) 2021 War-Keeper
 import discord
 import os
 from datetime import datetime, timedelta
@@ -241,4 +242,3 @@ async def test_voting(bot):
         assert dpytest.verify().message().contains().content(
             "Could not fine the Group you are in, please contact a TA or join with your group number")
 
-# Copyright (c) 2021 War-Keeper
