@@ -26,7 +26,13 @@ bot = Bot(intents=intents, command_prefix="$")
 
 
 # ------------------------------------------------------------------------------------------------------------------
-# Activates when the bot starts, prints the name of the server it joins and the names of all members of that server
+#    Function: on_ready()
+#    Description: Activates when the bot starts, prints the name of the server it joins and the names of all members
+#                 of that server
+#    Inputs:
+#    -
+#    Outputs:
+#    -
 # ------------------------------------------------------------------------------------------------------------------
 @bot.event
 async def on_ready():
@@ -54,7 +60,12 @@ async def on_ready():
 
 
 # ------------------------------------------------------------------------------------------
-# Handles on_member_join events, DMs the user and asks for verification through newComer.py
+#    Function: on_member_join(member)
+#    Description: Handles on_member_join events, DMs the user and asks for verification through newComer.py
+#    Inputs:
+#    - member: used to add member to the knowledge of the bot
+#    Outputs:
+#    -
 # ------------------------------------------------------------------------------------------
 @bot.event
 async def on_member_join(member):
@@ -64,11 +75,19 @@ async def on_member_join(member):
     await member.add_roles(unverified)
     await member.send("Hello " + member.name + "!")
     await member.send(
-        "Verify yourself before getting started! \n To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )")
+        "Verify yourself before getting started! \n To use the verify command, do: $verify <your_full_name> \n \
+        ( For example: $verify Jane Doe )")
 
 
 # ------------------------------------------------
-# Handles bot errors, prints errors to a log file
+#    Function: on_error(event, *args, **kwargs)
+#    Description: Handles bot errors, prints errors to a log file
+#    Inputs:
+#    - member: event of the error
+#    - *args: any arguments that come with error
+#    - **kwargs: other args
+#    Outputs:
+#    -
 # ------------------------------------------------
 @bot.event
 async def on_error(event, *args, **kwargs):
@@ -80,7 +99,12 @@ async def on_error(event, *args, **kwargs):
 
 
 # ----------------------------------
-# Command for shutting down the bot
+#    Function: on_member_join(member)
+#    Description: Command for shutting down the bot
+#    Inputs:
+#    - ctx: used to access the values passed through the current context
+#    Outputs:
+#    -
 # ----------------------------------
 @bot.command(name="shutdown", help="Shuts down the bot, only usable by the owner")
 @has_permissions(administrator=True)
