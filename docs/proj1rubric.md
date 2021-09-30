@@ -56,11 +56,11 @@ but nevertheless, here is a track record that everyone is contributing a lot)|3|
 |Do you provide troubleshooting information that describes the symptoms and step-by-step solutions for problems and error messages?|1|
 |If your software can be used as a library, package or service by other software, do you provide comprehensive API documentation?|0|
 |Do you store your documentation under revision control with your source code?|2|
-|Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation?|2|
-|Does your software describe how a user can get help with using your software?|2|
+|Do you publish your release history e.g. release data, version numbers, key features of each release etc. on your web site or in your documentation?|2| https://github.com/War-Keeper/ClassMateBot/releases
+|Does your software describe how a user can get help with using your software?|2| cpatel3@ncsu.edu, webrown2@ncsu.edu
 |Does your website and documentation describe what support, if any, you provide to users and developers?|2|
-|Does your project have an e-mail address or forum that is solely for supporting users?|2|
-|Are e-mails to your support e-mail address received by more than one person?|1|
+|Does your project have an e-mail address or forum that is solely for supporting users?|2| cpatel3@ncsu.edu, webrown2@ncsu.edu
+|Are e-mails to your support e-mail address received by more than one person?|1| cpatel3@ncsu.edu, webrown2@ncsu.edu
 |Does your project have a ticketing system to manage bug reports and feature requests?|0|
 |Is your project's ticketing system publicly visible to your users, so they can view bug reports and feature requests?|0|
 |Is your software’s architecture and design modular?|3|
