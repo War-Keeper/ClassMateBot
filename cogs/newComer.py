@@ -13,7 +13,7 @@ class Helper(commands.Cog):
     GUILD = os.getenv("GUILD")
     UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
     VERIFIED_MEMBER_ROLE = os.getenv("VERIFIED_MEMBER_ROLE")
-    path = "data/server_data/welcome"
+    path = "data/welcome"
 
     def __init__(self, bot):
         self.bot = bot
@@ -59,18 +59,21 @@ class Helper(commands.Cog):
                     writer.writerow([member.name, name])
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
-                await ctx.send("Thank you for verifying! You can start using " + self.GUILD)
-                # embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
-                # welcome_images = os.listdir(self.path)
-                # selected_image = random.choice(welcome_images)
-                # # embed.set_thumbnail(selected_image)
-                # await member.send(discord.File(selected_image))
-                embed = discord.Embed(
-                    description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                await ctx.send("Thank you for verifying! You can start using " + self.GUILD + "!")
+                embed = discord.Embed(description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
                 welcome_images = os.listdir(self.path)
                 selected_image = random.choice(welcome_images)
-                embed.set_thumbnail(selected_image)
-                await member.send(embed=embed)
+                file=discord.File(self.path + "\\" + selected_image)
+                embed.set_image(url = "attachment://"+ selected_image) # Embedding the image
+                await member.send(file=file, embed=embed)
+                # embed.set_thumbnail(selected_image)
+                # await member.send(discord.File(selected_image))
+                # embed = discord.Embed(
+                #     description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page")
+                # welcome_images = os.listdir(self.path)
+                # selected_image = random.choice(welcome_images)
+                # embed.set_thumbnail(selected_image)
+                # await member.send(embed=embed)
 
         else:  # user has verified role
             await ctx.send("You are already verified!")
