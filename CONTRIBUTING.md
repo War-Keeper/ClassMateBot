@@ -1,5 +1,7 @@
 # Contributing to ClassMateBot
 
+Thank you so much for taking an interest in contributing!
+
 Follow the set of guidelines below to contribute to ClassMateBot!
 
 ## Code of Conduct
@@ -74,4 +76,16 @@ Following these guidelines helps maintainers and the community understand your r
 - Include screenshots and animated GIFs which show you following the described steps and clearly demonstrate the problem. 
 
 - If the problem is related to performance or memory, include a CPU profile capture with your report.
+
+## Styleguides
+
+### Git Commit Messages
+
+- Describe why a change is being made.
+
+- Describe any limitations of the current code.
+
+- Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
+
+- Limit the first line to 72 characters or less
 
