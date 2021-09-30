@@ -76,7 +76,6 @@ pip install -r requirements.txt
 ```
 3. Once all the requirements are installed, use the python command to run the ```bot.py``` file.
 ```
-cd src
 python3 bot.py 
 ```
 
