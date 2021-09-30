@@ -1,4 +1,5 @@
 # TODO intro message from bot to new students with important messages and links
+# Copyright (c) 2021 War-Keeper
 import discord
 from discord.ext import commands
 import os
@@ -85,4 +86,3 @@ class Helper(commands.Cog):
 def setup(bot):
     bot.add_cog(Helper(bot))
 
-# Copyright (c) 2021 War-Keeper

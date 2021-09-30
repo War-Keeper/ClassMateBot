@@ -1,4 +1,5 @@
 # TODO deadline reminder for all students
+# Copyright (c) 2021 War-Keeper
 # This functionality provides various methods to manage reminders (in the form of creation, retrieval, updation and deletion)
 # A user can set up a reminder, check what is due this week or what is due today. He/She can also check all the due homeworks based on hte coursename.
 # A user can also update or delete a reminder if needed.
@@ -370,5 +371,3 @@ def setup(bot):
     loop = asyncio.get_event_loop()
     loop.create_task(n.delete_old_reminders())
     bot.add_cog(n)
-
-# Copyright (c) 2021 War-Keeper
