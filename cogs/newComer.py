@@ -1,5 +1,4 @@
 # TODO intro message from bot to new students with important messages and links
-# Copyright (c) 2021 War-Keeper
 import discord
 from discord.ext import commands
 import os
@@ -37,10 +36,10 @@ class Helper(commands.Cog):
     )
     async def verify(self, ctx, *, name: str = None):
         guild = None
-        for g in self.bot.guilds:
+        for g in self.bot.guilds: # finding guild using guild name
             if g.name == self.GUILD:
                 guild = g
-        member = guild.get_member(ctx.message.author.id)
+        member = guild.get_member(ctx.message.author.id) # finding member using member id
         unverified = discord.utils.get(
             guild.roles, name=self.UNVERIFIED_ROLE_NAME
         )  # finds the unverified role in the guild
@@ -86,3 +85,4 @@ class Helper(commands.Cog):
 def setup(bot):
     bot.add_cog(Helper(bot))
 
+# Copyright (c) 2021 War-Keeper
