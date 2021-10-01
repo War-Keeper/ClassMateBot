@@ -76,7 +76,12 @@ cd War-Keeper
 ```
 pip install -r requirements.txt
 ```
-3. Once all the requirements are installed, use the python command to run the ```bot.py``` file.
+3. Once the installation is complete, you will need to get the .env file that contains the bot token information. Please contact [Walter Brown](https://github.com/wevanbrown) to get the token information.
+```
+PLEASE DO NOT SHARE THE TOKEN ONLINE, 
+DO NOT UPLOAD TO GITHUB OR ELSE THE TOKEN WILL AUTOMATICALLY GET DESTROYED AND HAS TO BE REGENERATED
+```
+4. Once all the requirements are installed, use the python command to run the ```bot.py``` file.
 ```
 python3 bot.py 
 ```
