@@ -55,11 +55,8 @@ class Helper(commands.Cog):
                 verified = discord.utils.get(
                     guild.roles, name=self.VERIFIED_MEMBER_ROLE
                 )  # finds the verified role in the guild
-                with open(
-                    "data/server_data/name_mapping.csv", mode="a", newline=""
-                ) as outfile:  # storing discord name and actual name in name_mapping.csv
-                    writer = csv.writer(outfile)
-                    writer.writerow([member.name, name])
+                db.query('INSERT INTO name_mappings (username, real_name) VALUES (%s, %s)', (member.name, name))
+
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
                 await ctx.send(

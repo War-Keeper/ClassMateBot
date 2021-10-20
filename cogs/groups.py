@@ -58,8 +58,11 @@ class Groups(commands.Cog):
 
             # add the member to the group and send confirmation
             groups[group_num].append(member_name)
+            db.query(
+                'INSERT INTO groups (guild_id, group_num, member_name) VALUES (%s, %s, %s)',
+                (ctx.guild.id, group_num, member_name)
+            )
             await ctx.send('You are now in ' + group_num.title() + '!')
-            print_groups(groups)
 
         # error handling
         else:
@@ -88,7 +91,7 @@ class Groups(commands.Cog):
     async def remove(self, ctx, arg='group', arg2='-1'):
 
         # load groups csv
-        groups = load_groups()
+        groups = load_groups(ctx.guild.id)
 
         # get the name of the caller
         member_name = ctx.message.author.display_name.upper()
@@ -101,20 +104,24 @@ class Groups(commands.Cog):
 
             # if member in is the group, then remove them from it
             if member_name in groups[group_num]:
-                groups[group_num].remove(member_name)
+                db.query(
+                    'DELETE FROM groups WHERE guild_id = %s AND group_num = %s AND member_name = %s',
+                    (ctx.guild.id, group_num, member_name)
+                )
                 await ctx.send('You have been removed from ' + group_num.title() + '!')
             # else error message
             else:
                 await ctx.send('You are not in ' + group_num.title())
-            print_groups(groups)
 
         # if the arguments are not listed, then try to find out what group the member is in and remove them
         elif arg2 == '-1':
-            for key in groups.keys():
-                if member_name in groups[key]:
-                    groups[key].remove(member_name)
-                    await ctx.send('You are been removed from ' + key.title() + '!')
-            print_groups(groups)
+            rows_deleted = db.query(
+                'DELETE FROM groups WHERE guild_id = %s AND group_num = %s AND member_name = %s',
+                (ctx.guild.id, group_num, member_name)
+            )
+            for row in rows_deleted:
+                _, group_num, *_ = row
+                await ctx.send('You have been removed from ' + group_num + '!')
 
         # error handling
         else:
@@ -142,7 +149,7 @@ class Groups(commands.Cog):
     async def group(self, ctx):
 
         # load groups csv
-        groups = load_groups()
+        groups = load_groups(ctx.guild.id)
 
         # create embedded objects
         embed = discord.Embed(title='Group List', color=discord.Color.teal())
@@ -190,64 +197,52 @@ class Groups(commands.Cog):
 # -----------------------------------------------------------
 # Used to load the groups from the csv file into a dictionary
 # -----------------------------------------------------------
-def load_groups() -> dict:
-    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.chdir(dir)
-    os.chdir('data')
-    os.chdir('server_data')
-    with open('groups.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
-                                   rows[5].upper(), rows[6].upper()] for rows in reader}
+def load_groups(guild_id) -> dict:
+    groups = db.query('SELECT array_agg(name) FROM groups WHERE guild_id = %s GROUP BY group_num', (guild_id,))
+    # dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # os.chdir(dir)
+    # os.chdir('data')
+    # os.chdir('server_data')
+    # with open('groups.csv', mode='r') as infile:
+    #     reader = csv.reader(infile)
+    #     group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
+    #                                rows[5].upper(), rows[6].upper()] for rows in reader}
 
-    for key in group.keys():
-        group[key] = list(filter(None, group[key]))
+    # for key in group.keys():
+    #     group[key] = list(filter(None, group[key])
+    # )
 
-    return group
+    # TODO CHECK
 
-
-# -----------------------------------------------------------
-# Used to print the groups to the csv file
-# -----------------------------------------------------------
-def print_groups(group):
-    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.chdir(dir)
-    os.chdir('data')
-    os.chdir('server_data')
-    with open('groups.csv', mode='w', newline="") as outfile:
-        writer = csv.writer(outfile)
-        for key in group.keys():
-            while len(group[key]) < 6:
-                group[key].append(None)
-            writer.writerow([key] + group[key])
+    return groups
 
 
-# ------------------------------------------------------------
-# Used to load the members from the csv file into a dictionary
-# ------------------------------------------------------------
-def load_pool() -> dict:
-    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.chdir(dir)
-    os.chdir('data')
-    os.chdir('server_data')
-    with open('name_mapping.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        student_pools = {rows[0].upper(): rows[1].upper() for rows in reader}
-    return student_pools
+# # ------------------------------------------------------------
+# # Used to load the members from the csv file into a dictionary
+# # ------------------------------------------------------------
+# def load_pool() -> dict:
+#     dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#     os.chdir(dir)
+#     os.chdir('data')
+#     os.chdir('server_data')
+#     with open('name_mapping.csv', mode='r') as infile:
+#         reader = csv.reader(infile)
+#         student_pools = {rows[0].upper(): rows[1].upper() for rows in reader}
+#     return student_pools
 
 
-# -----------------------------------------------------------
-# Used to print the members to the csv file
-# -----------------------------------------------------------
-def print_pool(pools):
-    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.chdir(dir)
-    os.chdir('data')
-    os.chdir('server_data')
-    with open('name_mapping.csv', mode='w', newline="") as outfile:
-        writer = csv.writer(outfile)
-        for key, value in pools.items():
-            writer.writerow([key, value])
+# # -----------------------------------------------------------
+# # Used to print the members to the csv file
+# # -----------------------------------------------------------
+# def print_pool(pools):
+#     dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#     os.chdir(dir)
+#     os.chdir('data')
+#     os.chdir('server_data')
+#     with open('name_mapping.csv', mode='w', newline="") as outfile:
+#         writer = csv.writer(outfile)
+#         for key, value in pools.items():
+#             writer.writerow([key, value])
 
 
 # -----------------------------------------------------------

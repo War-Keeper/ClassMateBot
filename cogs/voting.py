@@ -34,9 +34,9 @@ class Voting(commands.Cog):
     (For example: $vote project 0)', pass_context=True)
     async def vote(self, ctx, arg='Project', arg2='-1'):
         # load the groups from the csv
-        groups = load_groups()
+        groups = load_groups(ctx.guild.id)
         # load the projects from the csv
-        projects = load_projects()
+        projects = load_projects(ctx.guild.id)
 
         # get the arguments for the project to vote on
         project_num = arg.upper() + ' ' + arg2
@@ -74,9 +74,11 @@ class Voting(commands.Cog):
                     return
 
             # add the group to the project list
-            projects[project_num].append(member_group)
+            db.query(
+                'INSERT INTO projects (guild_id, project_num, group_num) VALUES (%s, %s, %s)',
+                (ctx.guild.id, project_num, member_group)
+            )
             await ctx.send(member_group + ' has voted for ' + project_num.title() + '!')
-            print_projects(projects)
 
         # error handling
         else:
@@ -121,66 +123,43 @@ class Voting(commands.Cog):
 # -----------------------------------------------------------
 # Used to load the Project from the csv file into a dictionary
 # -----------------------------------------------------------
-def load_projects() -> dict:
-    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.chdir(dir)
-    os.chdir('data')
-    os.chdir('server_data')
-    with open('Project_mapping.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        student_pools = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
-                                           rows[5].upper(), rows[6].upper()] for rows in reader}
-    for key in student_pools.keys():
-        student_pools[key] = list(filter(None, student_pools[key]))
+def load_projects(guild_id) -> dict:
+    projects = db.query('SELECT array_agg(group_num) FROM projects WHERE guild_id = %s GROUP BY project_num', (guild_id,))
+    # dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # os.chdir(dir)
+    # os.chdir('data')
+    # os.chdir('server_data')
+    # with open('Project_mapping.csv', mode='r') as infile:
+    #     reader = csv.reader(infile)
+    #     student_pools = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
+    #                                        rows[5].upper(), rows[6].upper()] for rows in reader}
+    # for key in student_pools.keys():
+    #     student_pools[key] = list(filter(None, student_pools[key]))
 
-    return student_pools
-
-
-# -----------------------------------------------------------
-# Used to print the Projects to the csv file
-# -----------------------------------------------------------
-def print_projects(projects):
-    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.chdir(dir)
-    os.chdir('data')
-    os.chdir('server_data')
-    with open('Project_mapping.csv', mode='w', newline="") as outfile:
-        writer = csv.writer(outfile)
-        for key in projects.keys():
-            while len(projects[key]) < 6:
-                projects[key].append(None)
-            writer.writerow([key] + projects[key])
+    return projects
 
 
 # -----------------------------------------------------------
 # Used to load the groups from the csv file into a dictionary
 # -----------------------------------------------------------
-def load_groups() -> dict:
-    dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    os.chdir(dir)
-    os.chdir('data')
-    os.chdir('server_data')
-    with open('groups.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
-                                   rows[5].upper(), rows[6].upper()] for rows in reader}
+def load_groups(guild_id) -> dict:
+    groups = db.query('SELECT array_agg(member_name) FROM groups WHERE guild_id = %s GROUP BY group_num', (guild_id,))
+    # dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # os.chdir(dir)
+    # os.chdir('data')
+    # os.chdir('server_data')
+    # with open('groups.csv', mode='r') as infile:
+    #     reader = csv.reader(infile)
+    #     group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
+    #                                rows[5].upper(), rows[6].upper()] for rows in reader}
 
-    for key in group.keys():
-        group[key] = list(filter(None, group[key]))
+    # for key in group.keys():
+    #     group[key] = list(filter(None, group[key])
+    # )
 
-    return group
+    # TODO CHECK
 
-
-# -----------------------------------------------------------
-# Used to print the groups to the csv file
-# -----------------------------------------------------------
-def print_groups(group):
-    with open('data/server_data/groups.csv', mode='w', newline="") as outfile:
-        writer = csv.writer(outfile)
-        for key in group.keys():
-            while len(group[key]) < 6:
-                group[key].append(None)
-            writer.writerow([key] + group[key])
+    return groups
 
 
 # -----------------------------------------------------------
