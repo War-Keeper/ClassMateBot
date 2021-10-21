@@ -8,13 +8,15 @@ from discord import Intents
 from discord.ext.commands import Bot
 from dotenv import load_dotenv
 from discord.ext.commands import Bot, has_permissions, CheckFailure
-
+from better_profanity import profanity
+profanity.load_censor_words()
 # ----------------------------------------------------------------------------------------------
 # Initializes the discord bot with a unique TOKEN and joins the bot to a server provided by the
 # GUILD token. Handles bot shutdown and error events
 # ----------------------------------------------------------------------------------------------
 
 # Load the environment
+
 load_dotenv()
 # Get the token for our bot
 TOKEN = os.getenv("TOKEN")
@@ -60,6 +62,44 @@ async def on_ready():
     )
     print("READY!")
 
+###########################
+# Function: on_message
+# Description: run when a message is sent to a discord the bot occupies
+# Inputs:
+#      - message: the message the user sent to a channel
+###########################
+@bot.event
+async def on_message(message):
+    ''' run on message sent to a channel '''
+    # allow messages from test bot
+    if message.author.bot and message.author.id == 889697640411955251:
+        ctx = await bot.get_context(message)
+        await bot.invoke(ctx)
+
+    if message.author == bot.user:
+        return
+
+    if profanity.contains_profanity(message.content):
+        await message.channel.send(message.author.name + ' says: ' +
+            profanity.censor(message.content))
+        await message.delete()
+
+
+
+###########################
+# Function: on_message_edit
+# Description: run when a user edits a message
+# Inputs:
+#      - before: the old message
+#      - after: the new message
+###########################
+@bot.event
+async def on_message_edit(before, after):
+    ''' run on message edited '''
+    if profanity.check_profanity(after.content):
+        await after.channel.send(after.author.name + ' says: ' +
+            profanity.censor_profanity(after.content))
+        await after.delete()
 
 # ------------------------------------------------------------------------------------------
 #    Function: on_member_join(member)
