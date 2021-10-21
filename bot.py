@@ -84,6 +84,7 @@ async def on_message(message):
             profanity.censor(message.content))
         await message.delete()
 
+    await bot.process_commands(message)
 
 
 ###########################
