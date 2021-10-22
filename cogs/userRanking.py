@@ -77,6 +77,8 @@ class userRanking(commands.Cog):
             user = ctx.author
             lvl = int(users[str(ctx.author.id)]['level'])
             exp = int(5 * (lvl ** 2) + (50 * lvl) + 100) #XP cap
+            experience = int(users[str(user.id)]['experience'])
+            boxes = floor((experience * 20) / exp)
 
             embed = discord.Embed(Title=f"**{user}'s Rank**",
                                   Description=f"Experience: {lvl}/{5 * (lvl ** 2) + (50 * lvl) + 100}", color=0x0091ff)
@@ -85,7 +87,8 @@ class userRanking(commands.Cog):
             embed.add_field(name="Level", value=f"**{users[str(user.id)]['level']}**", inline=True)
             embed.add_field(name="Experience", value=f"**{str(int(users[str(user.id)]['experience']))} / {exp}**",
                             inline=True)
-
+            embed.add_field(name="Progress to next level",
+                            value=boxes * ":blue_square:" + (20 - boxes) * ":white_large_square:", inline=False)
             embed.set_footer(text="Contribute more to level up!")
             await ctx.send(embed=embed)
 
@@ -97,6 +100,9 @@ class userRanking(commands.Cog):
                 users[str(user.id)]['LastMessage'] = await self.to_integer(datetime.now())
             lvl = int(users[str(user.id)]['level'])
             exp = int(5 * (lvl ** 2) + (50 * lvl) + 100)
+            experience = int(users[str(user.id)]['experience'])
+            boxes = floor((experience * 20) / exp)
+
             embed = discord.Embed(Title=f"**{user}'s Rang**",
                                   Description=f"Experience: {lvl}/{5 * (lvl ** 2) + (50 * lvl) + 100}", color=0x0091ff)
             embed.set_thumbnail(url=f"{user.avatar_url}")
@@ -104,6 +110,8 @@ class userRanking(commands.Cog):
             embed.add_field(name="Level", value=f"**{users[str(user.id)]['level']}**", inline=True)
             embed.add_field(name="Experience", value=f"**{str(int(users[str(user.id)]['experience']))} / {exp}**",
                             inline=True)
+            embed.add_field(name="Progress to next level",
+                            value=boxes * ":blue_square:" + (20 - boxes) * ":white_large_square:", inline=False)
             embed.set_footer(text="Contribute more to level up!")
             await ctx.send(embed=embed)
 
