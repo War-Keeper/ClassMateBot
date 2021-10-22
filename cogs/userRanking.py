@@ -87,8 +87,8 @@ class userRanking(commands.Cog):
             embed.add_field(name="Level", value=f"**{users[str(user.id)]['level']}**", inline=True)
             embed.add_field(name="Experience", value=f"**{str(int(users[str(user.id)]['experience']))} / {exp}**",
                             inline=True)
-            embed.add_field(name="Progress to next level",
-                            value=boxes * ":blue_square:" + (20 - boxes) * ":white_large_square:", inline=False)
+            embed.add_field(name="Progress Bar",
+                            value=boxes * ":green_square:" + (20 - boxes) * ":white_large_square:", inline=False)
             embed.set_footer(text="Contribute more to level up!")
             await ctx.send(embed=embed)
 
@@ -110,8 +110,8 @@ class userRanking(commands.Cog):
             embed.add_field(name="Level", value=f"**{users[str(user.id)]['level']}**", inline=True)
             embed.add_field(name="Experience", value=f"**{str(int(users[str(user.id)]['experience']))} / {exp}**",
                             inline=True)
-            embed.add_field(name="Progress to next level",
-                            value=boxes * ":blue_square:" + (20 - boxes) * ":white_large_square:", inline=False)
+            embed.add_field(name="Progress Bar",
+                            value=boxes * ":green_square:" + (20 - boxes) * ":white_large_square:", inline=False)
             embed.set_footer(text="Contribute more to level up!")
             await ctx.send(embed=embed)
 
