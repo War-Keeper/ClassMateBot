@@ -118,9 +118,28 @@ class userRanking(commands.Cog):
         with open('data/participation/users.json', 'w') as f:
             json.dump(users, f, indent=4)
 
+    # Admin command to add experience to certain individuals
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def add_exp(self, ctx, user: discord.Member, number: int):
+        with open('data/participation/users.json', 'r') as f:
+            users = json.load(f)
+        if not ctx.author.bot:
+            users[str(user.id)]['experience'] += int(number)
+            await ctx.send("exp added")
+        with open('data/participation/users.json', 'w') as f:
+            json.dump(users, f)
 
-
-
+    # Admin command to add level to certain individuals
+    @commands.command()
+    async def add_lvl(self, ctx, user: discord.Member, number: int):
+        with open('data/participation/users.json', 'r') as f:
+            users = json.load(f)
+        if not ctx.author.bot:
+            users[str(user.id)]['level'] += int(number)
+            await ctx.send("level added")
+        with open('data/participation/users.json', 'w') as f:
+            json.dump(users, f)
 
     @commands.command()
     async def add_database(self, ctx, user: discord.Member):
