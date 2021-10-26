@@ -4,6 +4,10 @@ import csv
 import discord
 from discord.ext import commands
 import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import db
 
 
 # -----------------------------------------------------------
@@ -33,58 +37,48 @@ class Voting(commands.Cog):
     To use the vote command, do: $vote \'Project\' <Num> \n \
     (For example: $vote project 0)', pass_context=True)
     async def vote(self, ctx, arg='Project', arg2='-1'):
-        # load the groups from the csv
-        groups = load_groups(ctx.guild.id)
-        # load the projects from the csv
-        projects = load_projects(ctx.guild.id)
-
         # get the arguments for the project to vote on
-        project_num = arg.upper() + ' ' + arg2
+        project_num = int(arg2)
 
         # get the name of the caller
         member_name = ctx.message.author.display_name.upper()
 
-        # initialize which group the member in in
-        member_group = '-1'
-
-        # check which group the member is in
-        for key in groups.keys():
-            if member_name in groups[key]:
-                member_group = key
-                print(member_group)
+        groups = db.query(
+            'SELECT group_num FROM group_members WHERE guild_id = %s AND member_name = %s LIMIT 1',
+            (ctx.guild.id, member_name)
+        )
 
         # error handle if member is not in a group
-        if member_group == '-1':
-            await ctx.send("Could not fine the Group you are in, please contact a TA or join with your group number")
+        if len(groups) == 0:
+            await ctx.send("Could not find the Group you are in, please contact a TA or join with your group number")
             raise commands.UserInputError
 
-        # if the project is a valid option
-        if project_num in projects:
+        num_groups = db.query(
+            'SELECT COUNT(*) FROM project_groups WHERE guild_id = %s AND project_num = %s',
+            (ctx.guild.id, project_num)
+        )[0]
 
-            # check if project has more than 6 groups voting on it
-            if len(projects[project_num]) == 6:
-                await ctx.send('A Project cannot have more than 6 Groups working on it!')
-                return
+        # check if project has more than 6 groups voting on it
+        if num_groups == 6:
+            await ctx.send('A Project cannot have more than 6 Groups working on it!')
+            return
 
-            # check if you have already voted for another group
-            for key in projects.keys():
-                if member_group in projects[key]:
-                    print(member_group)
-                    await ctx.send('You already voted for ' + key.title())
-                    return
+        member_group = groups[0]
+        voted_for = db.query(
+            'SELECT project_num FROM project_groups WHERE guild_id = %s AND group_num = %s',
+            (ctx.guild.id, member_group)
+        )
+        if voted_for:
+            project_voted_for, *_ = voted_for[0]
+            await ctx.send(f'You already voted for {project_voted_for}')
+            return
 
-            # add the group to the project list
-            db.query(
-                'INSERT INTO projects (guild_id, project_num, group_num) VALUES (%s, %s, %s)',
-                (ctx.guild.id, project_num, member_group)
-            )
-            await ctx.send(member_group + ' has voted for ' + project_num.title() + '!')
-
-        # error handling
-        else:
-            await ctx.send('Not a valid Project')
-            await ctx.send('Used for voting for Project 2 and 3, To use the vote command, do: $vote \'Project\' <Num> \n \
-            (For example: $vote project 0)')
+        # add the group to the project list
+        db.query(
+            'INSERT INTO project_groups (guild_id, project_num, group_num) VALUES (%s, %s, %s)',
+            (ctx.guild.id, project_num, member_group)
+        )
+        await ctx.send(f'{member_group} has voted for {project_num}!')
 
     # this handles errors related to the vote command
     @vote.error
@@ -92,6 +86,7 @@ class Voting(commands.Cog):
         if isinstance(error, commands.UserInputError):
             await ctx.send('To join a group, use the join command, do: $vote \'Project\' <Num> \n \
             ( For example: $vote Project 0 )')
+        print(error)
 
     # ----------------------------------------------------------------------------------
     #    Function: projects(self, ctx)
@@ -102,64 +97,14 @@ class Voting(commands.Cog):
     #    Outputs: prints the list of current projects
     # ----------------------------------------------------------------------------------
     @commands.command(name='projects', help='print projects with groups assigned to them', pass_context=True)
-    @commands.dm_only()
+    # @commands.dm_only()
     async def projects(self, ctx):
-
-        projects = load_projects()
-        overall = ''
-        for key in projects.keys():
-            if key != 'PROJECT_NUM':
-                s = ''
-                temp = projects[key]
-                for num in temp:
-                    s += num + ', '
-                if s != '':
-                    overall += key + ': ' + s[:-2] + '\n'
-                else:
-                    overall += key + ': \n'
-        await ctx.send(overall)
-
-
-# -----------------------------------------------------------
-# Used to load the Project from the csv file into a dictionary
-# -----------------------------------------------------------
-def load_projects(guild_id) -> dict:
-    projects = db.query('SELECT array_agg(group_num) FROM projects WHERE guild_id = %s GROUP BY project_num', (guild_id,))
-    # dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # os.chdir(dir)
-    # os.chdir('data')
-    # os.chdir('server_data')
-    # with open('Project_mapping.csv', mode='r') as infile:
-    #     reader = csv.reader(infile)
-    #     student_pools = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
-    #                                        rows[5].upper(), rows[6].upper()] for rows in reader}
-    # for key in student_pools.keys():
-    #     student_pools[key] = list(filter(None, student_pools[key]))
-
-    return projects
-
-
-# -----------------------------------------------------------
-# Used to load the groups from the csv file into a dictionary
-# -----------------------------------------------------------
-def load_groups(guild_id) -> dict:
-    groups = db.query('SELECT array_agg(member_name) FROM groups WHERE guild_id = %s GROUP BY group_num', (guild_id,))
-    # dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # os.chdir(dir)
-    # os.chdir('data')
-    # os.chdir('server_data')
-    # with open('groups.csv', mode='r') as infile:
-    #     reader = csv.reader(infile)
-    #     group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
-    #                                rows[5].upper(), rows[6].upper()] for rows in reader}
-
-    # for key in group.keys():
-    #     group[key] = list(filter(None, group[key])
-    # )
-
-    # TODO CHECK
-
-    return groups
+        projects = db.query(
+            "SELECT project_num, string_agg(group_num::text, ', ') AS group_members FROM project_groups WHERE guild_id = %s GROUP BY project_num",
+            (ctx.guild.id,)
+        )
+        
+        await ctx.send('\n'.join(f'Project {project_num}: Group(s) {group_members}' for project_num, group_members in projects))
 
 
 # -----------------------------------------------------------

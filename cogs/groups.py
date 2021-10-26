@@ -3,6 +3,10 @@ import discord
 from discord.ext import commands
 import os
 import csv
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import db
 
 
 # -----------------------------------------------------------
@@ -11,7 +15,6 @@ import csv
 # -----------------------------------------------------------
 class Groups(commands.Cog):
     student_pool = {}
-    groups = {}
 
     # -----------------------------------------------------------
     # initialize
@@ -33,47 +36,36 @@ class Groups(commands.Cog):
     @commands.command(name='join', help='To use the join command, do: $join \'Group\' <Num> \n \
     ( For example: $join Group 0 )', pass_context=True)
     async def join(self, ctx, arg='group', arg2='-1'):
-        # load the groups from the csv
-        groups = load_groups()
-
         # get the name of the caller
         member_name = ctx.message.author.display_name.upper()
 
         # get the arguments for the group to join
-        group_num = arg.upper() + ' ' + arg2
+        group_num = int(arg2)
 
-        # if the the group is a valid option
-        if group_num in groups:
+        members_in_group = [row[0] for row in db.query(
+            'SELECT member_name FROM group_members WHERE guild_id = %s AND group_num = %s',
+            (ctx.guild.id, group_num)
+        )]
 
-            # check if group has more than 6 people
-            if len(groups[group_num]) == 6:
-                await ctx.send('A group cannot have more than 6 people!')
+        if len(members_in_group) == 6:
+            await ctx.send('A group cannot have more than 6 people!')
+        else:
+            if member_name in members_in_group:
+                await ctx.send(f'You are already in group {group_num}')
                 return
 
-            # check if member is already in another group
-            for key in groups.keys():
-                if member_name in groups[key]:
-                    await ctx.send('You are already in ' + key.title())
-                    return
-
-            # add the member to the group and send confirmation
-            groups[group_num].append(member_name)
             db.query(
-                'INSERT INTO groups (guild_id, group_num, member_name) VALUES (%s, %s, %s)',
+                'INSERT INTO group_members (guild_id, group_num, member_name) VALUES (%s, %s, %s)',
                 (ctx.guild.id, group_num, member_name)
             )
-            await ctx.send('You are now in ' + group_num.title() + '!')
-
-        # error handling
-        else:
-            await ctx.send('Not a valid group')
-            await ctx.send('To use the join command, do: $join \'Group\' <Num> \n ( For example: $join Group 0 )')
+            await ctx.send(f'You are now in {group_num}!')
 
     # this handles errors related to the join command
     @join.error
     async def join_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('To use the join command, do: $join \'Group\' <Num> \n ( For example: $join Group 0 )')
+        print(error)
 
     # -------------------------------------------------------------------------------------------------------
     #    Function: remove(self, ctx, arg='group', arg2='-1')
@@ -89,45 +81,48 @@ class Groups(commands.Cog):
     @commands.command(name='remove', help='To use the remove command, do: $remove \'Group\' <Num> \n \
     ( For example: $remove Group 0 )', pass_context=True)
     async def remove(self, ctx, arg='group', arg2='-1'):
-
-        # load groups csv
-        groups = load_groups(ctx.guild.id)
-
         # get the name of the caller
         member_name = ctx.message.author.display_name.upper()
 
-        # get the arguments for the group to join
-        group_num = arg.upper() + ' ' + arg2
-
-        # if the the group is a valid option
-        if group_num in groups:
-
-            # if member in is the group, then remove them from it
-            if member_name in groups[group_num]:
-                db.query(
-                    'DELETE FROM groups WHERE guild_id = %s AND group_num = %s AND member_name = %s',
-                    (ctx.guild.id, group_num, member_name)
-                )
-                await ctx.send('You have been removed from ' + group_num.title() + '!')
-            # else error message
-            else:
-                await ctx.send('You are not in ' + group_num.title())
-
-        # if the arguments are not listed, then try to find out what group the member is in and remove them
-        elif arg2 == '-1':
+        if arg2 == '-1':
             rows_deleted = db.query(
-                'DELETE FROM groups WHERE guild_id = %s AND group_num = %s AND member_name = %s',
+                'SELECT group_num FROM group_members WHERE guild_id = %s AND member_name = %s',
+                (ctx.guild.id, member_name)
+            )
+            db.query(
+                'DELETE FROM group_members WHERE guild_id = %s AND member_name = %s',
+                (ctx.guild.id, member_name)
+            )
+            for group_num, *_ in rows_deleted:
+                await ctx.send(f'You have been removed from {group_num}!')
+        else:
+            group_num = int(arg2)
+
+            # num_in_group = db.query(
+            #     'SELECT COUNT(*) FROM group_members WHERE guild_id = %s AND group_num = %s',
+            #     (ctx.guild.id, group_num)
+            # )
+
+            # if num_in_group > 0:
+            rows_deleted = db.query(
+                'SELECT * FROM group_members WHERE guild_id = %s AND group_num = %s AND member_name = %s',
                 (ctx.guild.id, group_num, member_name)
             )
-            for row in rows_deleted:
-                _, group_num, *_ = row
-                await ctx.send('You have been removed from ' + group_num + '!')
+            db.query(
+                'DELETE FROM group_members WHERE guild_id = %s AND group_num = %s AND member_name = %s',
+                (ctx.guild.id, group_num, member_name)
+            )
 
-        # error handling
-        else:
-            await ctx.send(group_num.title() + ' is not a valid group')
-            await ctx.send('To use the remove command, do: $remove \'Group\' <Num> \n \
-            ( For example: $remove Group 0 )')
+            if len(rows_deleted) > 0:
+                await ctx.send(f'You have been removed from {group_num}!')
+            else:
+                await ctx.send(f'You are not in {group_num}')
+
+            # error handling
+            # else:
+            #     await ctx.send(f'{group_num} is not a valid group')
+            #     await ctx.send('To use the remove command, do: $remove \'Group\' <Num> \n \
+            #     ( For example: $remove Group 0 )')
 
     # this handles errors related to the remove command
     @remove.error
@@ -135,6 +130,7 @@ class Groups(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send('To use the remove command, do: $remove \'Group\' <Num> \n \
             ( For example: $remove Group 0 )')
+        print(error)
 
     # -------------------------------------------------------------------------------------------------------
     #    Function: group(self, ctx)
@@ -145,11 +141,14 @@ class Groups(commands.Cog):
     #    Outputs: prints the list of groups
     # -------------------------------------------------------------------------------------------------------
     @commands.command(name='group', help='print amount of groups that are full', pass_context=True)
-    @commands.dm_only()
+    # @commands.dm_only()
+    # TODO maybe include channel where all groups displayed
     async def group(self, ctx):
-
         # load groups csv
-        groups = load_groups(ctx.guild.id)
+        groups = db.query(
+            'SELECT group_num, array_agg(member_name) FROM group_members WHERE guild_id = %s GROUP BY group_num ORDER BY group_num',
+            (ctx.guild.id,)
+        )
 
         # create embedded objects
         embed = discord.Embed(title='Group List', color=discord.Color.teal())
@@ -160,13 +159,12 @@ class Groups(commands.Cog):
 
         # ignoring the first line, add all group member counts to the embedded objects
         count = 0
-        for key in groups.keys():
-            if key != 'GROUP_NUM':
-                if count < 20:
-                    embed.add_field(name=key, value=str(len(groups[key])), inline=True)
-                else:
-                    embed2.add_field(name=key, value=str(len(groups[key])), inline=True)
-                count += 1
+        for group_num, members in groups:
+            if count < 20:
+                embed.add_field(name=group_num, value=str(len(members)), inline=True)
+            else:
+                embed2.add_field(name=group_num, value=str(len(members)), inline=True)
+            count += 1
 
         # print the embedded objects
         embed.set_footer(text="Number Represents the Group Size")
@@ -193,28 +191,6 @@ class Groups(commands.Cog):
     #
     #     print_pool(student_pool)
 
-
-# -----------------------------------------------------------
-# Used to load the groups from the csv file into a dictionary
-# -----------------------------------------------------------
-def load_groups(guild_id) -> dict:
-    groups = db.query('SELECT array_agg(name) FROM groups WHERE guild_id = %s GROUP BY group_num', (guild_id,))
-    # dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    # os.chdir(dir)
-    # os.chdir('data')
-    # os.chdir('server_data')
-    # with open('groups.csv', mode='r') as infile:
-    #     reader = csv.reader(infile)
-    #     group = {rows[0].upper(): [rows[1].upper(), rows[2].upper(), rows[3].upper(), rows[4].upper(),
-    #                                rows[5].upper(), rows[6].upper()] for rows in reader}
-
-    # for key in group.keys():
-    #     group[key] = list(filter(None, group[key])
-    # )
-
-    # TODO CHECK
-
-    return groups
 
 
 # # ------------------------------------------------------------

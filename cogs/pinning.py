@@ -8,14 +8,16 @@ from discord import message
 from discord.ext import commands
 import json
 import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import db
 
 
 class Pinning(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.pinned_messages = db.query('SELECT * FROM pinned_messages')
-        # self.pinned_messages = json.load(open("data/PinMessage/PinnedMessages.json"))
 
     # Test command to check if the bot is working
     @commands.command()
@@ -37,9 +39,11 @@ class Pinning(commands.Cog):
     async def addMessage(self, ctx, tagname: str, link: str, *, description: str):
         author = ctx.message.author
 
-        self.pinned_messages.append(
-            {"ID": author.id, "TAG": tagname, "DESCRIPTION": description, "LINK": link})
-        json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
+        db.query(
+            'INSERT INTO pinned_messages (guild_id, author_id, tag, description, link) VALUES (%s, %s, %s, %s, %s)',
+            (ctx.guild.id, author.id, tagname, description, link)
+        )
+
         await ctx.send(
             "A new message has been pinned with tag: {} and link: {} with a description: {} by {}.".format(tagname,
                                                                                                            link,
@@ -51,6 +55,7 @@ class Pinning(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
                 'To use the pin command, do: $pin TAGNAME LINK DESCRIPTION \n ( For example: $pin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890813190433292298 HW8 reminder )')
+        print(error)
 
     # -----------------------------------------------------------------------------------------------------------------
     #    Function: deleteMessage(self, ctx, tagname: str, *, description: str)
@@ -66,8 +71,12 @@ class Pinning(commands.Cog):
         author = ctx.message.author
 
         rows_deleted = db.query(
-            'DELETE FROM pinned_messages WHERE tag = %s AND id = %s AND description = %s',
-            (tagname, author.id, description)
+            'SELECT * FROM pinned_messages WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (ctx.guild.id, tagname, author.id, description)
+        )
+        db.query(
+            'DELETE FROM pinned_messages WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (ctx.guild.id, tagname, author.id, description)
         )
 
         if len(rows_deleted) == 0:
@@ -81,7 +90,8 @@ class Pinning(commands.Cog):
     async def deleteMessage_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
-                'To use the unpin command, do: $pin TAGNAME DESCRIPTION \n ( For example: $pin HW HW8 reminder )')
+                'To use the unpin command, do: $unpin TAGNAME DESCRIPTION \n ( For example: $unpin HW HW8 reminder )')
+        print(error)
 
     # ----------------------------------------------------------------------------------
     #    Function: retrieveMessages(self, ctx, tagname: str)
@@ -96,8 +106,8 @@ class Pinning(commands.Cog):
     async def retrieveMessages(self, ctx, tagname: str):
         author = ctx.message.author
         messages = db.query(
-            'SELECT tag, link, description FROM pinned_messages WHERE id = %s AND tag = %s',
-            (author.id, tagname)
+            'SELECT tag, link, description FROM pinned_messages WHERE guild_id = %s AND author_id = %s AND tag = %s',
+            (ctx.guild.id, author.id, tagname)
         )
         if len(messages) == 0:
             await ctx.send("No messages found with the given tagname and author combination")
@@ -109,7 +119,8 @@ class Pinning(commands.Cog):
     async def retrieveMessages_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
-                'To use the pinnedmessages command, do: $pin TAGNAME \n ( For example: $pin HW )')
+                'To use the pinnedmessages command, do: $pinnedmessages TAGNAME \n ( For example: $pinnedmessages HW )')
+        print(error)
 
     # ----------------------------------------------------------------------------------------------------------
     #    Function: updatePinnedMessage(self, ctx, tagname: str, new_link: str, *, description: str)
@@ -126,8 +137,12 @@ class Pinning(commands.Cog):
     async def updatePinnedMessage(self, ctx, tagname: str, new_link: str, *, description: str):
         author = ctx.message.author
         rows_updated = db.query(
-            'UPDATE pinned_messages SET link = %s WHERE tag = %s AND id = %s AND description = %s',
-            (new_link, tagname, author.id, description)
+            'SELECT * FROM pinned_messages WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (ctx.guild.id, tagname, author.id, description)
+        )
+        db.query(
+            'UPDATE pinned_messages SET link = %s WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (new_link, ctx.guild.id, tagname, author.id, description)
         )
         if len(rows_updated) == 0:
             await ctx.send("No message found with the given tagname, description and author combination")
@@ -140,6 +155,7 @@ class Pinning(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
                 'To use the updatepin command, do: $pin TAGNAME NEW_LINK DESCRIPTION \n ( $updatepin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890814489480531969 HW8 reminder )')
+        print(error)
 
 
 # -------------------------------------

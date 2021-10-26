@@ -9,6 +9,8 @@ from discord.ext.commands import Bot
 from dotenv import load_dotenv
 from discord.ext.commands import Bot, has_permissions, CheckFailure
 
+import db
+
 # ----------------------------------------------------------------------------------------------
 # Initializes the discord bot with a unique TOKEN and joins the bot to a server provided by the
 # GUILD token. Handles bot shutdown and error events
@@ -38,16 +40,17 @@ bot = Bot(intents=intents, command_prefix="$")
 # ------------------------------------------------------------------------------------------------------------------
 @bot.event
 async def on_ready():
-    guild = discord.utils.get(bot.guilds, name=GUILD)
+    # guild = discord.utils.get(bot.guilds, name=GUILD)
 
-    print(
-        f"{bot.user} is connected to the following guild:\n"
-        f"{guild.name}(id: {guild.id})"
-    )
+    # print(
+    #     f"{bot.user} is connected to the following guild:\n"
+    #     f"{guild.name}(id: {guild.id})"
+    # )
 
-    members = "\n -".join([member.name for member in guild.members])
-    print(f"Guild Members:\n - {members}")
-
+    # members = "\n -".join([member.name for member in guild.members])
+    # print(f"Guild Members:\n - {members}")
+    db.connect()
+    
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             bot.load_extension(f"cogs.{filename[:-3]}")

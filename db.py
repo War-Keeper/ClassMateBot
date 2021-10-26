@@ -4,7 +4,7 @@ import psycopg2
 CONN = None
 def connect():
     global CONN
-    DATABASE_URL = os.environ['DATABASE_URL']
+    DATABASE_URL = os.getenv('DATABASE_URL')
 
     try:
         CONN = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -15,12 +15,15 @@ def connect():
 def query(sql, args=()):
     ''' query the database and get back rows selected/modified '''
     cur = CONN.cursor()
-    cur.execute(sql, args)
-    rows = cur.fetchall()
+    try:
+        cur.execute(sql, args)
+    except Exception as e:
+        print(type(e).__name__, e)
+        raise e
+    if cur.description is None:
+        rows = []
+    else:
+        rows = cur.fetchall()
     CONN.commit()
     cur.close()
     return rows
-
-
-def custom_query(f):
-    return f(CONN)
