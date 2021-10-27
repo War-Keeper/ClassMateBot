@@ -11,14 +11,6 @@ import pytest
 # Main file bot testing. Uses dpytest to test bot activity on a simulated server with simulated members
 # ------------------------------------------------------------------------------------------------------
 
-# --------------------
-# Tests cogs/hello.py
-# --------------------
-@pytest.mark.asyncio
-async def test_hello(bot):
-    await dpytest.message("$hello")
-    assert dpytest.verify().message().content("Hello World!")
-
 
 # -------------------
 # Tests cogs/ping.py
@@ -64,12 +56,11 @@ async def test_groupError(bot):
     await dpytest.message("$join Group -1")
     assert dpytest.verify().message().contains().content('Not a valid group')
     assert dpytest.verify().message().contains().content(
-        'To use the join command, do: $join \'Group\' <Num> \n ( For example: $join Group 0 )')
+        'To use the join command, do: $join \'Group\' <Num> where 0 <= <Num> <= 99 \n ( For example: $join Group 0 )')
     # Try to remove ourself from an invalid group
     await(dpytest.message("$remove Group 999"))
     assert dpytest.verify().message().contains().content('Group 999 is not a valid group')
-    assert dpytest.verify().message().contains().content('To use the remove command, do: $remove \'Group\' <Num> \n \
-            ( For example: $remove Group 0 )')
+    assert dpytest.verify().message().contains().content('To use the remove command, do: $remove \'Group\' <Num> where 0 <= <Num> <= 99')
     # with pytest.raises(Exception):
     #     await dpytest.message("$join")
     #     assert dpytest.verify().message().contains().content(

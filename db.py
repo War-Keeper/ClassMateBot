@@ -1,15 +1,20 @@
 import os
 import psycopg2
+from dotenv import load_dotenv
+
+load_dotenv()
 
 CONN = None
-def connect():
-    global CONN
-    DATABASE_URL = os.getenv('DATABASE_URL')
+TESTING_MODE = False
+# def connect():
+    # global CONN
 
-    try:
-        CONN = psycopg2.connect(DATABASE_URL, sslmode='require')
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+DATABASE_URL = os.getenv('DATABASE_URL')
+try:
+    CONN = psycopg2.connect(DATABASE_URL, sslmode='require')
+    print('PostgreSQL connection successful')
+except (Exception, psycopg2.DatabaseError) as error:
+    print(error)
 
 
 def query(sql, args=()):
@@ -24,6 +29,7 @@ def query(sql, args=()):
         rows = []
     else:
         rows = cur.fetchall()
-    CONN.commit()
+    if not TESTING_MODE:
+        CONN.commit()
     cur.close()
     return rows

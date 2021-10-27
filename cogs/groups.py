@@ -5,6 +5,8 @@ import os
 import csv
 import sys
 
+from discord.ext.commands.core import group
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import db
 
@@ -42,6 +44,11 @@ class Groups(commands.Cog):
         # get the arguments for the group to join
         group_num = int(arg2)
 
+        if group_num < 0 or group_num > 99:
+            await ctx.send('Not a valid group')
+            await ctx.send('To use the join command, do: $join \'Group\' <Num> where 0 <= <Num> <= 99 \n ( For example: $join Group 0 )')
+            return
+
         members_in_group = [row[0] for row in db.query(
             'SELECT member_name FROM group_members WHERE guild_id = %s AND group_num = %s',
             (ctx.guild.id, group_num)
@@ -58,7 +65,7 @@ class Groups(commands.Cog):
                 'INSERT INTO group_members (guild_id, group_num, member_name) VALUES (%s, %s, %s)',
                 (ctx.guild.id, group_num, member_name)
             )
-            await ctx.send(f'You are now in {group_num}!')
+            await ctx.send(f'You are now in Group {group_num}!')
 
     # this handles errors related to the join command
     @join.error
@@ -94,16 +101,15 @@ class Groups(commands.Cog):
                 (ctx.guild.id, member_name)
             )
             for group_num, *_ in rows_deleted:
-                await ctx.send(f'You have been removed from {group_num}!')
+                await ctx.send(f'You have been removed from Group {group_num}!')
         else:
             group_num = int(arg2)
+            if group_num < 0 or group_num > 99:
+                await ctx.send(f'Group {group_num} is not a valid group')
+                await ctx.send('To use the remove command, do: $remove \'Group\' <Num> where 0 <= <Num> <= 99 \n'
+                '( For example: $remove Group 0 )')
+                return
 
-            # num_in_group = db.query(
-            #     'SELECT COUNT(*) FROM group_members WHERE guild_id = %s AND group_num = %s',
-            #     (ctx.guild.id, group_num)
-            # )
-
-            # if num_in_group > 0:
             rows_deleted = db.query(
                 'SELECT * FROM group_members WHERE guild_id = %s AND group_num = %s AND member_name = %s',
                 (ctx.guild.id, group_num, member_name)
@@ -114,15 +120,9 @@ class Groups(commands.Cog):
             )
 
             if len(rows_deleted) > 0:
-                await ctx.send(f'You have been removed from {group_num}!')
+                await ctx.send(f'You have been removed from Group {group_num}!')
             else:
-                await ctx.send(f'You are not in {group_num}')
-
-            # error handling
-            # else:
-            #     await ctx.send(f'{group_num} is not a valid group')
-            #     await ctx.send('To use the remove command, do: $remove \'Group\' <Num> \n \
-            #     ( For example: $remove Group 0 )')
+                await ctx.send(f'You are not in Group {group_num}')
 
     # this handles errors related to the remove command
     @remove.error
@@ -161,9 +161,9 @@ class Groups(commands.Cog):
         count = 0
         for group_num, members in groups:
             if count < 20:
-                embed.add_field(name=group_num, value=str(len(members)), inline=True)
+                embed.add_field(name=f'Group {group_num}', value=str(len(members)), inline=True)
             else:
-                embed2.add_field(name=group_num, value=str(len(members)), inline=True)
+                embed2.add_field(name=f'Group {group_num}', value=str(len(members)), inline=True)
             count += 1
 
         # print the embedded objects

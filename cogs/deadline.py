@@ -96,7 +96,8 @@ class Deadline(commands.Cog):
         )
 
         for course, homework, due_date in reminders_deleted:
-            await ctx.send(f"Following reminder has been deleted: Course: {course}, Homework Name: {homework}, Due Date: {due_date}")
+            due = due_date.strftime("%Y-%m-%d %H:%M:%S")
+            await ctx.send(f"Following reminder has been deleted: Course: {course}, Homework Name: {homework}, Due Date: {due}")
 
     @deleteReminder.error
     async def deleteReminder_error(self, ctx, error):
@@ -328,5 +329,5 @@ def setup(bot):
     n = Deadline(bot)
     loop = asyncio.get_event_loop()
     # TODO
-    # loop.create_task(n.delete_old_reminders())
+    loop.create_task(n.delete_old_reminders())
     bot.add_cog(n)

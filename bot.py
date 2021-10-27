@@ -22,8 +22,6 @@ import db
 load_dotenv()
 # Get the token for our bot
 TOKEN = os.getenv("TOKEN")
-# Get the token for our discord server
-GUILD = os.getenv("GUILD")
 UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
 # Set the bots intents to all
 intents = Intents.all()
@@ -51,7 +49,7 @@ async def on_ready():
 
     # members = "\n -".join([member.name for member in guild.members])
     # print(f"Guild Members:\n - {members}")
-    db.connect()
+    # db.connect()
     
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):

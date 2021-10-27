@@ -70,7 +70,7 @@ class Voting(commands.Cog):
         )
         if voted_for:
             project_voted_for, *_ = voted_for[0]
-            await ctx.send(f'You already voted for {project_voted_for}')
+            await ctx.send(f'You already voted for Project {project_voted_for}')
             return
 
         # add the group to the project list
@@ -78,7 +78,7 @@ class Voting(commands.Cog):
             'INSERT INTO project_groups (guild_id, project_num, group_num) VALUES (%s, %s, %s)',
             (ctx.guild.id, project_num, member_group)
         )
-        await ctx.send(f'{member_group} has voted for {project_num}!')
+        await ctx.send(f'{member_group} has voted for Project {project_num}!')
 
     # this handles errors related to the vote command
     @vote.error
