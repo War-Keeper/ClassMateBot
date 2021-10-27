@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from discord.ext.commands import Bot, has_permissions, CheckFailure
 from better_profanity import profanity
 profanity.load_censor_words()
-
+import db
 
 # ----------------------------------------------------------------------------------------------
 # Initializes the discord bot with a unique TOKEN and joins the bot to a server provided by the
