@@ -87,6 +87,7 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
+
 ###########################
 # Function: on_message_edit
 # Description: run when a user edits a message
