@@ -1,6 +1,6 @@
 # This functionality provides mechanism for students to ask and answer questions
 # Students and instructors can choose ask and answer questions anonymously or have their names displayed
-
+from discord import NotFound
 from discord.ext import commands
 
 class QuestionsAnswers:
@@ -55,6 +55,73 @@ class Qanda(commands.Cog):
         self.question_number += 1
 
         # delete original question
+        await ctx.message.delete()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    # Function: answer
+    # Description: adds user answer to specific question and post anonymously
+    # Inputs:
+    #      - ctx: context of the command
+    #      - num: question number being answered
+    #      - ans: answer text to question specified in num
+    #      - anonymous: option if user wants their question to be shown anonymously
+    # Outputs:
+    #      - User answer added to question post
+    # -----------------------------------------------------------------------------------------------------------------
+    @commands.command(name='answer',
+                      help='Answer question. Please put answer text in quotes. Add *anonymous* if desired.'
+                           'EX: $answer 1 /"Oct 12/" anonymous')
+    async def answer(self, ctx, num, ans, anonymous=''):
+        ''' answer the specific question '''
+
+        # get author
+        if anonymous == '':
+            author = ctx.message.author.name
+        elif anonymous == 'anonymous':
+            author = anonymous
+        else:
+            await ctx.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
+
+        # check if question number exists
+        if int(num) not in self.qna_dict.keys():
+            await ctx.author.send('Invalid question number: ' + str(num))
+            # delete user msg
+            await ctx.message.delete()
+            return
+
+        # get question
+        q_answered = self.qna_dict[int(num)]
+        # check if message exists
+        try:
+            message = await ctx.fetch_message(q_answered.msg)
+        except NotFound:
+            await ctx.author.send('Invalid question number: ' + str(num))
+            # delete user msg
+            await ctx.message.delete()
+            return
+
+        # generate and edit msg with answer
+        if "instructor" in [y.name.lower() for y in ctx.author.roles]:
+            role = 'Instructor'
+        else:
+            role = 'Student'
+        new_answer = author + ' (' + role + ') Ans: ' + ans
+
+        # store new answer
+        if not q_answered.answer == '':
+            q_answered.answer += '\n'
+        q_answered.answer += new_answer
+
+        # check if message exists and edit
+        q_str = 'Q' + str(q_answered.number) + ': ' + q_answered.question
+        content = q_str + '\n' + q_answered.answer
+        try:
+            await message.edit(content=content)
+            # message.content = content
+        except NotFound:
+            await ctx.author.send('Invalid question number: ' + str(num))
+
+        # delete user msg
         await ctx.message.delete()
 
 def setup(bot):
