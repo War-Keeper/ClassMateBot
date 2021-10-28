@@ -2,7 +2,6 @@
 import discord
 from discord.ext import commands
 
-
 # ----------------------------------------------------------------------------------------------
 # Returns the ping of the bot, useful for testing bot lag and as a simple functionality command
 # ----------------------------------------------------------------------------------------------
@@ -23,6 +22,11 @@ class Helpful(commands.Cog):
     async def ping(self, ctx):
         # We set an upper bound on the ping of the bot to prevent float_infinity situations which crash testing
         await ctx.send(f"Pong! My ping currently is {round(min(999999999, self.bot.latency * 1000))}ms")
+
+        graphType = "bar"
+        title = "Midterm grade distribution"
+
+
 
 
 # -------------------------------------

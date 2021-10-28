@@ -113,7 +113,6 @@ async def shutdown(ctx):
     ctx.bot.logout()
     exit()
 
-
 # Starts the bot with the current token
 bot.run(TOKEN)
 
