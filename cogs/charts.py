@@ -32,6 +32,13 @@ class Charts(commands.Cog):
         shortened_link = shortener.tinyurl.short(link)
         await ctx.send(f"{shortened_link}")
 
+    @grades.error
+    async def grades_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(
+                "FORMAT: $grades chart_type (pie, bar, line), title (1 word), "
+                "number of As, number of Bs, number of Cs, number of Ds, number of Fs \n"
+                "\n EXAMPLE: $grades bar 5 4 3 2 1")
 # -------------------------------------
 # add the file to the bot's cog system
 # -------------------------------------
