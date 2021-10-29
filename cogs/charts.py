@@ -11,7 +11,7 @@ class Charts(commands.Cog):
     @commands.command(name="grades",
                       help="View grade distribution; FORMAT (7 inputs): chart_type (pie, bar, line), title (1 word),"
                            "number of As, number of Bs, number of Cs, number of Ds, number of Fs")
-    async def grades(self, ctx, chart: str):
+    async def grades(self, ctx, chart: str, aGrade: int, bGrade: int, cGrade: int, dGrade: int, fGrade: int):
         qc = QuickChart()
         qc.width = 500
         qc.height = 300
@@ -22,7 +22,7 @@ class Charts(commands.Cog):
                 "labels": ["A", "B", "C", "D", "F"],
                 "datasets": [{
                     "label": "grades",
-                    "data": [1, 2, 3, 4, 5]
+                    "data": [aGrade, bGrade, cGrade, dGrade, fGrade]
                 }]
             }
         }
