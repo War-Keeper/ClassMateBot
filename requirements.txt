@@ -16,3 +16,4 @@ pytest-cov==2.12.1
 python-dateutil==2.8.2
 python-dotenv==0.19.0
 psycopg2-binary==2.9.1
+better-profanity==0.7.0
