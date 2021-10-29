@@ -4,16 +4,20 @@
 # The bot personally pins the messages, i.e. the user can only see his pinned messages and not of others.
 # The messages could be arranged on the basis of tags which the user can himself/herself give to the messages.
 import discord
+from discord import message
 from discord.ext import commands
 import json
 import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import db
 
 
 class Pinning(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.pinned_messages = json.load(open("data/PinMessage/PinnedMessages.json"))
 
     # Test command to check if the bot is working
     @commands.command()
@@ -35,9 +39,11 @@ class Pinning(commands.Cog):
     async def addMessage(self, ctx, tagname: str, link: str, *, description: str):
         author = ctx.message.author
 
-        self.pinned_messages.append(
-            {"ID": author.id, "TAG": tagname, "DESCRIPTION": description, "LINK": link})
-        json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
+        db.query(
+            'INSERT INTO pinned_messages (guild_id, author_id, tag, description, link) VALUES (%s, %s, %s, %s, %s)',
+            (ctx.guild.id, author.id, tagname, description, link)
+        )
+
         await ctx.send(
             "A new message has been pinned with tag: {} and link: {} with a description: {} by {}.".format(tagname,
                                                                                                            link,
@@ -49,6 +55,7 @@ class Pinning(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
                 'To use the pin command, do: $pin TAGNAME LINK DESCRIPTION \n ( For example: $pin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890813190433292298 HW8 reminder )')
+        print(error)
 
     # -----------------------------------------------------------------------------------------------------------------
     #    Function: deleteMessage(self, ctx, tagname: str, *, description: str)
@@ -62,33 +69,29 @@ class Pinning(commands.Cog):
     @commands.command(name="unpin", help="Unpin a message by passing the tagname and description of the pinned message")
     async def deleteMessage(self, ctx, tagname: str, *, description: str):
         author = ctx.message.author
-        to_remove = []
-        for pin_mes in self.pinned_messages:
-            if ((pin_mes["TAG"] == tagname) and (pin_mes["ID"] == author.id) and (
-                    pin_mes["DESCRIPTION"] == description)):
-                to_remove.append(pin_mes)
 
-        if (len(to_remove) == 0):
-            await ctx.send(
-                "No message found with the combination of tagname: {}, description {} and author: {}.".format(tagname,
-                                                                                                              description,
-                                                                                                              author))
+        rows_deleted = db.query(
+            'SELECT * FROM pinned_messages WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (ctx.guild.id, tagname, author.id, description)
+        )
+        db.query(
+            'DELETE FROM pinned_messages WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (ctx.guild.id, tagname, author.id, description)
+        )
 
-        for pin_mes in to_remove:
-            self.pinned_messages.remove(pin_mes)
-        if to_remove:
-            json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
+        if len(rows_deleted) == 0:
             await ctx.send(
-                "{} pinned message(s) has been deleted with tag: {} and description: {}.".format(len(to_remove),
-                                                                                                 str(pin_mes["TAG"]),
-                                                                                                 str(pin_mes[
-                                                                                                         "DESCRIPTION"])))
+                f"No message found with the combination of tagname: {tagname}, description {description} and author: {author}.")
+        else:
+            await ctx.send(
+                f"{len(rows_deleted)} pinned message(s) has been deleted with tag: {tagname} and description: {description}.")
 
     @deleteMessage.error
     async def deleteMessage_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
-                'To use the unpin command, do: $pin TAGNAME DESCRIPTION \n ( For example: $pin HW HW8 reminder )')
+                'To use the unpin command, do: $unpin TAGNAME DESCRIPTION \n ( For example: $unpin HW HW8 reminder )')
+        print(error)
 
     # ----------------------------------------------------------------------------------
     #    Function: retrieveMessages(self, ctx, tagname: str)
@@ -102,18 +105,22 @@ class Pinning(commands.Cog):
     @commands.command(name="pinnedmessages", help="Retrieve the pinned messages by passing the tagname")
     async def retrieveMessages(self, ctx, tagname: str):
         author = ctx.message.author
-        for pin_mes in self.pinned_messages:
-            if (pin_mes["ID"] == author.id and pin_mes["TAG"] == tagname):
-                await ctx.send("Tag: {}, Message Link: {}, Description: {}".format(tagname, pin_mes["LINK"],
-                                                                                   pin_mes["DESCRIPTION"]))
-            else:
-                await ctx.send("No messages found with the given tagname and author combination")
+        messages = db.query(
+            'SELECT tag, link, description FROM pinned_messages WHERE guild_id = %s AND author_id = %s AND tag = %s',
+            (ctx.guild.id, author.id, tagname)
+        )
+        if len(messages) == 0:
+            await ctx.send("No messages found with the given tagname and author combination")
+        for tag, link, description in messages:
+            await ctx.send(f"Tag: {tag}, Message Link: {link}, Description: {description}")
+                
 
     @retrieveMessages.error
     async def retrieveMessages_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
-                'To use the pinnedmessages command, do: $pin TAGNAME \n ( For example: $pin HW )')
+                'To use the pinnedmessages command, do: $pinnedmessages TAGNAME \n ( For example: $pinnedmessages HW )')
+        print(error)
 
     # ----------------------------------------------------------------------------------------------------------
     #    Function: updatePinnedMessage(self, ctx, tagname: str, new_link: str, *, description: str)
@@ -129,55 +136,32 @@ class Pinning(commands.Cog):
                       help="Update a previously pinned message by passing the tagname, new link and old description in the same order")
     async def updatePinnedMessage(self, ctx, tagname: str, new_link: str, *, description: str):
         author = ctx.message.author
-        flag = False
-
-        for pin_mes in self.pinned_messages:
-            flag = False
-            if ((pin_mes["TAG"] == tagname) and (pin_mes["ID"] == author.id) and (
-                    pin_mes["DESCRIPTION"] == description)):
-                pin_mes["LINK"] = new_link
-                flag = True
-                if (flag):
-                    json.dump(self.pinned_messages, open("data/PinMessage/PinnedMessages.json", "w"))
-                    await ctx.send(
-                        "A pinned message has been updated with tag: {} and new link: {} by: {}.".format(tagname,
-                                                                                                         new_link,
-                                                                                                         author))
-                else:
-                    await ctx.send("No message found with the given tagname, description and author combination")
+        rows_updated = db.query(
+            'SELECT * FROM pinned_messages WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (ctx.guild.id, tagname, author.id, description)
+        )
+        db.query(
+            'UPDATE pinned_messages SET link = %s WHERE guild_id = %s AND tag = %s AND author_id = %s AND description = %s',
+            (new_link, ctx.guild.id, tagname, author.id, description)
+        )
+        if len(rows_updated) == 0:
+            await ctx.send("No message found with the given tagname, description and author combination")
+        else:
+            await ctx.send(
+                f"A pinned message has been updated with tag: {tagname} and new link: {new_link} by: {author}.")
 
     @updatePinnedMessage.error
     async def updatePinnedMessage_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
                 'To use the updatepin command, do: $pin TAGNAME NEW_LINK DESCRIPTION \n ( $updatepin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890814489480531969 HW8 reminder )')
-
-
-# -----------------------------------------
-# Used to create a json file if none exist
-# -----------------------------------------
-def check_folders():
-    if not os.path.exists("data/PinMessage"):
-        print("Creating data/PinMessage folder...")
-        os.makedirs("data/PinMessage")
-
-
-# -----------------------------------------
-# Used to create a json file if none exist
-# -----------------------------------------
-def check_files():
-    f = "data/PinMessage/PinnedMessages.json"
-    if not os.path.exists(f):
-        print("Creating empty PinnedMessages.json...")
-        json.dump([], open(f, "w"))
+        print(error)
 
 
 # -------------------------------------
 # add the file to the bot's cog system
 # -------------------------------------
 def setup(bot):
-    check_folders()
-    check_files()
     n = Pinning(bot)
     bot.add_cog(n)
 

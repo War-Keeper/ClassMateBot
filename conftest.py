@@ -8,6 +8,9 @@ from discord.ext.commands import Bot
 from setuptools import glob
 from os.path import dirname as d
 from os.path import abspath, join
+import db
+
+db.TESTING_MODE = True
 
 intents = Intents.all()
 
@@ -40,5 +43,7 @@ def pytest_sessionfinish():
         except Exception as e:
             print(f"Error while deleting file {path}: {e}")
     print("\npySession closed successfully")
+    # rollback all db modifications made
+    db.CONN.rollback()
 
 # Copyright (c) 2021 War-Keeper
