@@ -35,7 +35,6 @@ class Charts(commands.Cog):
                     "data": [aGrade, bGrade, cGrade, dGrade, fGrade]
                 }]
             }
-
         }
         link = qc.get_url()
         shortener = pyshorteners.Shortener()
@@ -67,8 +66,44 @@ class Charts(commands.Cog):
             else:
                 await ctx.send(f" View grade distribution: {storage[str(adminId)]['URL']}")
 
+    @commands.command(name="customchart",
+                      help="View grade distribution; FORMAT (many): chart_type (pie, bar, line), title (1 word),"
+                           "list data as coordinates: (a,1), (b,2), (c,3)")
+    @commands.has_permissions(administrator=True)
+    async def customchart(self, ctx, chart: str, title: str, datacount: int, *args):
 
+        if len(args) / 2 != datacount:
+            raise IllegalArgumentsError
 
+        labelslist = []
+        datasetlist = []
+
+        for x in range(datacount):
+            labelslist.append(args[x])
+            print(args[x])
+
+        for x in range(datacount, len(args)):
+            datasetlist.append(args[x])
+            print(args[x])
+
+        qc = QuickChart()
+        qc.width = 500
+        qc.height = 300
+        qc.device_pixel_ratio = 2.0
+        qc.config = {
+            "type": "{}".format(chart),
+            "data": {
+                "labels": labelslist,
+                "datasets": [{
+                    "label": "{}".format(title),
+                    "data": datasetlist
+                }]
+            }
+        }
+        link = qc.get_url()
+        shortener = pyshorteners.Shortener()
+        shortened_link = shortener.tinyurl.short(link)
+        await ctx.send(f"{shortened_link}")
 
 
 # -------------------------------------
@@ -76,3 +111,7 @@ class Charts(commands.Cog):
 # -------------------------------------
 def setup(bot):
     bot.add_cog(Charts(bot))
+
+class IllegalArgumentsError(Exception):
+    print("customchart arguments invalid")
+    pass
