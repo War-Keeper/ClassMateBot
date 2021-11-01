@@ -233,3 +233,33 @@ async def test_voting(bot):
         assert dpytest.verify().message().contains().content(
             "Could not fine the Group you are in, please contact a TA or join with your group number")
 
+
+# --------------------
+# Tests cogs/reviewQs
+# --------------------
+@pytest.mark.asyncio
+async def test_review_qs(bot):
+    # Test review question functionalities
+    # create roles and get user
+    user = dpytest.get_config().members[0]
+    guild = dpytest.get_config().guilds[0]
+    await guild.create_role(name="Instructor")
+    role = discord.utils.get(guild.roles, name="Instructor")
+    await dpytest.add_role(user, role)
+
+    # Test adding a question
+    await dpytest.message("$addQuestion \"What class is this?\" \"CSC510\"", member=user)
+    assert dpytest.verify().message().contains().content(
+        'A new review question has been added! Question: What class is this? and Answer: CSC510.')
+
+    # Test getting a question
+    await dpytest.message("$getQuestion", member=user)
+    assert dpytest.verify().message().contains().content(
+        "What class is this? \n ||CSC510||")
+
+    # Test error
+    with pytest.raises(Exception):
+        await dpytest.message("$addQuestion \"Is this a test question?\"", member=user)
+        assert dpytest.verify().message().contains().content(
+            'To use the addQuestion command, do: $addQuestion \"Question\" \"Answer\" \n'
+            '(For example: $addQuestion \"What class is this?\" "CSC510")')
