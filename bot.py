@@ -4,8 +4,11 @@
 import os
 
 import discord
+from discord.utils import get
+from discord.ext import commands
 from discord import Intents
 from discord.ext.commands import Bot
+from discord_components import DiscordComponents, Button, ButtonStyle
 from dotenv import load_dotenv
 from discord.ext.commands import Bot, has_permissions, CheckFailure
 from better_profanity import profanity
@@ -28,6 +31,31 @@ intents = Intents.all()
 # Set all bot commands to begin with $
 bot = Bot(intents=intents, command_prefix="$")
 
+# ------------------------------------------------------------------------------------------------------------------
+#    Function: on_guild_join()
+#    Description: Activates when the bot joins a new guild, prints the name of the server it joins and the names of all members
+#                 of that server
+#    Inputs:
+#    -
+#    Outputs:
+#    -
+# ------------------------------------------------------------------------------------------------------------------
+@bot.event
+async def on_guild_join(guild):
+    for channel in guild.text_channels:
+        if channel.permissions_for(guild.me).send_messages:
+            if 'verified' not in guild.roles:
+                await guild.create_role(name="verified", colour=discord.Colour(0x2ecc71),
+                                        permissions=discord.Permissions.general())
+            if 'unverified' not in guild.roles:
+                await guild.create_role(name="unverified", colour=discord.Colour(0xe74c3c),
+                                        permissions=discord.Permissions.none())
+            # Assign Verified role to admin
+            leader = guild.owner
+            leadrole = get(guild.roles, name='verified')
+            await channel.send(leader.name + " has been given verified role!")
+            await leader.add_roles(leadrole, reason=None, atomic=True)
+            await channel.send("To verified members, type \"$verify @<member>\"")
 
 # ------------------------------------------------------------------------------------------------------------------
 #    Function: on_ready()

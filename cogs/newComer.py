@@ -13,8 +13,6 @@ import db
 # Contains commands for member verification, which is handled with direct DMs to the bot
 # ---------------------------------------------------------------------------------------
 class Helper(commands.Cog):
-    UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
-    VERIFIED_MEMBER_ROLE = os.getenv("VERIFIED_MEMBER_ROLE")
     path = os.path.join("data", "welcome")
 
     def __init__(self, bot):
@@ -23,14 +21,15 @@ class Helper(commands.Cog):
     # -------------------------------------------------------------------------------------------------------------
     #    Function: verify(self, ctx, *, name: str = None)
     #    Description: Ask the bot to give the user the verified role in the server
+    #    Constraint: only other verified members can use this command
     #    Inputs:
     #    - self: used to access parameters passed to the class through the constructor
     #    - ctx: used to access the values passed through the current context
     #    - *:
     #    - name: name of the user to verify
-    #    Outputs: returns a success message if the user is sucessfully verified or error in case of syntax problems
+    #    Outputs: returns a success message if the user is successfully verified or error in case of syntax problems
     # --------------------------------------------------------------------------------------------------------------
-    @commands.dm_only()
+    @commands.has_role("verified")
     @commands.command(
         name="verify",
         pass_context=True,
@@ -38,10 +37,19 @@ class Helper(commands.Cog):
     )
     async def verify(self, ctx, *, name: str = None):
         member = ctx.message.author
-        # finds the unverified role in the guild
-        unverified = discord.utils.get(ctx.guild.roles, name=self.UNVERIFIED_ROLE_NAME)
 
-        # checks if the user running the command has the unveirifed role
+        #check if verified and unverified roles exist
+        if discord.utils.get(ctx.guild.roles, name="unverified") == None:
+            await ctx.send("Warning: there is no unverified role in this server!")
+            pass
+        if discord.utils.get(ctx.guild.roles, name="verified") == None:
+            await ctx.send("Warning: there is no verified role in this server!")
+            pass
+
+        # finds the unverified role in the guild
+        unverified = discord.utils.get(ctx.guild.roles, name="unverified")
+
+        # checks if the user running the command has the unverified role
         if unverified in member.roles:
             if name == None:
                 await ctx.send(
@@ -49,7 +57,7 @@ class Helper(commands.Cog):
                 )
             else:
                 # finds the verified role in the guild
-                verified = discord.utils.get(ctx.guild.roles, name=self.VERIFIED_MEMBER_ROLE)
+                verified = discord.utils.get(ctx.guild.roles, name="verified")
                 db.query('INSERT INTO name_mappings (guild_id, username, real_name) VALUES (%s, %s, %s)', (ctx.guild.id, member.name, name))
 
                 await member.add_roles(verified)  # adding verfied role
