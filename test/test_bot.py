@@ -263,6 +263,6 @@ async def test_review_qs(bot):
     # Test error
     with pytest.raises(Exception):
         await dpytest.message("$addQuestion \"Is this a test question?\"", member=user)
-        assert dpytest.verify().message().contains().content(
-            'To use the addQuestion command, do: $addQuestion \"Question\" \"Answer\" \n'
-            '(For example: $addQuestion \"What class is this?\" "CSC510")')
+    assert dpytest.verify().message().contains().content(
+        'To use the addQuestion command, do: $addQuestion \"Question\" \"Answer\" \n'
+        '(For example: $addQuestion \"What class is this?\" "CSC510")')
