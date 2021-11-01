@@ -5,23 +5,10 @@ from discord.ext import commands
 import db
 
 
-class QuestionsAnswers:
-    ''' Class containing needed question/answer information and identification '''
-
-    def __init__(self, qs, number, author, message, ans):
-        self.question = qs
-        self.number = number
-        self.author = author
-        self.msg = message
-        self.answer = ans
-
-
 class Qanda(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.question_number = 1
-        self.qna_dict = {}
 
     # -----------------------------------------------------------------------------------------------------------------
     #    Function: askQuestion(self, ctx, qs: str, anonymous)
@@ -44,6 +31,8 @@ class Qanda(commands.Cog):
             author = None
         else:
             await ctx.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
+            await ctx.message.delete()
+            return
 
         # get number of questions + 1
         num = db.query('SELECT COUNT(*) FROM questions WHERE guild_id = %s', (ctx.guild.id,))[0][0] + 1
@@ -61,6 +50,24 @@ class Qanda(commands.Cog):
         )
 
         # delete original question
+        await ctx.message.delete()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    #    Function: ask_error(self, ctx, error)
+    #    Description: prints error message for ask command
+    #    Inputs:
+    #       - ctx: context of the command
+    #       - error: error message
+    #    Outputs:
+    #       - Error details
+    # -----------------------------------------------------------------------------------------------------------------
+    @askQuestion.error
+    async def ask_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(
+                'To use the ask command, do: $ask \"QUESTION\" anonymous*<optional>* \n '
+                '(For example: $ask \"What class is this?\" anonymous)')
+        print(error)
         await ctx.message.delete()
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -87,6 +94,8 @@ class Qanda(commands.Cog):
             author = None
         else:
             await ctx.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
+            await ctx.message.delete()
+            return
 
         # check if question number exists
         q = db.query('SELECT number, question, author_id, msg_id FROM questions WHERE guild_id = %s AND number = %s',
@@ -118,7 +127,7 @@ class Qanda(commands.Cog):
         )
 
         # generate and edit msg with answer
-        q_author_str = 'anonymous' if author is None else (await self.bot.fetch_user(q[2])).name
+        q_author_str = 'anonymous' if q[2] is None else (await self.bot.fetch_user(q[2])).name
         new_answer = "Q{}: {} by {}\n".format(q[0], q[1], q_author_str)
 
         # get all answers for question and add to msg
@@ -135,6 +144,24 @@ class Qanda(commands.Cog):
             await ctx.author.send('Invalid question number: ' + str(num))
 
         # delete user msg
+        await ctx.message.delete()
+
+    # -----------------------------------------------------------------------------------------------------------------
+    #    Function: answer_error(self, ctx, error)
+    #    Description: prints error message for answer command
+    #    Inputs:
+    #       - ctx: context of the command
+    #       - error: error message
+    #    Outputs:
+    #       - Error details
+    # -----------------------------------------------------------------------------------------------------------------
+    @answer.error
+    async def answer_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(
+                'To use the answer command, do: $answer QUESTION_NUMBER \"ANSWER\" anonymous*<optional>*\n '
+                '(For example: $answer 2 \"Yes\")')
+        print(error)
         await ctx.message.delete()
 
 
