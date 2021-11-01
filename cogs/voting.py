@@ -84,8 +84,8 @@ class Voting(commands.Cog):
     @vote.error
     async def vote_error(self, ctx, error):
         if isinstance(error, commands.UserInputError):
-            await ctx.send('To join a group, use the join command, do: $vote \'Project\' <Num> \n \
-            ( For example: $vote Project 0 )')
+            await ctx.send('To join a group, use the join command, do: $vote \'Project\' <Num> \n'
+            '( For example: $vote Project 0 )')
         print(error)
 
     # ----------------------------------------------------------------------------------
