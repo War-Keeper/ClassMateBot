@@ -2,15 +2,19 @@
 # Students and instructors can choose ask and answer questions anonymously or have their names displayed
 from discord import NotFound
 from discord.ext import commands
+import db
+
 
 class QuestionsAnswers:
     ''' Class containing needed question/answer information and identification '''
+
     def __init__(self, qs, number, author, message, ans):
         self.question = qs
         self.number = number
         self.author = author
         self.msg = message
         self.answer = ans
+
 
 class Qanda(commands.Cog):
 
@@ -35,24 +39,26 @@ class Qanda(commands.Cog):
 
         # get author
         if anonymous == '':
-            author = ctx.message.author.name
+            author = ctx.message.author.id
         elif anonymous == 'anonymous':
-            author = anonymous
+            author = None
         else:
             await ctx.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
 
+        # get number of questions + 1
+        num = db.query('SELECT COUNT(*) FROM questions WHERE guild_id = %s', (ctx.guild.id,))[0][0] + 1
+
         # format question
-        q_str = 'Q' + str(self.question_number) + ': ' + qs + ' by ' + author + '\n'
+        author_str = 'anonymous' if author is None else (await self.bot.fetch_user(author)).name
+        q_str = "Q{}: {} by {}".format(num, qs, author_str)
 
         message = await ctx.send(q_str)
 
-        # create QNA object
-        new_question = QuestionsAnswers(qs, self.question_number, author, message.id, '')
-        # add question to list
-        self.qna_dict[self.question_number] = new_question
-
-        # increment question number for next question
-        self.question_number += 1
+        # add to db
+        db.query(
+            'INSERT INTO questions (guild_id, number, question, author_id, msg_id) VALUES (%s, %s, %s, %s, %s)',
+            (ctx.guild.id, num, qs, author, message.id)
+        )
 
         # delete original question
         await ctx.message.delete()
@@ -76,53 +82,62 @@ class Qanda(commands.Cog):
 
         # get author
         if anonymous == '':
-            author = ctx.message.author.name
+            author = ctx.message.author.id
         elif anonymous == 'anonymous':
-            author = anonymous
+            author = None
         else:
             await ctx.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
 
         # check if question number exists
-        if int(num) not in self.qna_dict.keys():
+        q = db.query('SELECT number, question, author_id, msg_id FROM questions WHERE guild_id = %s AND number = %s',
+                     (ctx.guild.id, num))
+        print(q)
+        if len(q) == 0:
             await ctx.author.send('Invalid question number: ' + str(num))
             # delete user msg
             await ctx.message.delete()
             return
+        q = q[0]
 
-        # get question
-        q_answered = self.qna_dict[int(num)]
         # check if message exists
         try:
-            message = await ctx.fetch_message(q_answered.msg)
+            message = await ctx.fetch_message(q[3])
         except NotFound:
             await ctx.author.send('Invalid question number: ' + str(num))
             # delete user msg
             await ctx.message.delete()
             return
 
-        # generate and edit msg with answer
+        # add answer to db
         if "instructor" in [y.name.lower() for y in ctx.author.roles]:
             role = 'Instructor'
         else:
             role = 'Student'
-        new_answer = author + ' (' + role + ') Ans: ' + ans
+        db.query(
+            'INSERT INTO answers (guild_id, q_number, answer, author_id, author_role) VALUES (%s, %s, %s, %s, %s)',
+            (ctx.guild.id, num, ans, author, role)
+        )
 
-        # store new answer
-        if not q_answered.answer == '':
-            q_answered.answer += '\n'
-        q_answered.answer += new_answer
+        # generate and edit msg with answer
+        q_author_str = 'anonymous' if author is None else (await self.bot.fetch_user(q[2])).name
+        new_answer = "Q{}: {} by {}\n".format(q[0], q[1], q_author_str)
 
-        # check if message exists and edit
-        q_str = 'Q' + str(q_answered.number) + ': ' + q_answered.question
-        content = q_str + '\n' + q_answered.answer
+        # get all answers for question and add to msg
+        answers = db.query('SELECT answer, author_id, author_role FROM answers WHERE guild_id = %s AND q_number = %s',
+                           (ctx.guild.id, num))
+        for answer, author, role in answers:
+            a_author = 'anonymous' if author is None else (await self.bot.fetch_user(author)).name
+            new_answer += "{} ({}) Ans: {}\n".format(a_author, role, answer)
+
+        # edit message
         try:
-            await message.edit(content=content)
-            # message.content = content
+            await message.edit(content=new_answer)
         except NotFound:
             await ctx.author.send('Invalid question number: ' + str(num))
 
         # delete user msg
         await ctx.message.delete()
+
 
 def setup(bot):
     n = Qanda(bot)
