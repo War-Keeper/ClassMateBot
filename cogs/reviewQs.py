@@ -1,30 +1,11 @@
 # This functionality provides mechanism for instructors to post a random review question from the databse
 from discord.ext import commands
-import random
 import db
-
-class Questions:
-    ''' Class containing needed question/answer information and identification '''
-    def __init__(self, num, qs, ans):
-        self.number = num
-        self.question = qs
-        self.answer = ans
 
 class ReviewQs(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.q_dict = {}
-        self.recent_q = []
-        # add questions manually for initial implementation
-        # TODO store questions in database
-        self.q_dict[1] = Questions(1, "What are similarities between on-prem and cloud?",
-                  "Most of the characteristics of software engineering stay the same, "
-                  "development is “Mostly” location agnostic.")
-        self.q_dict[2] = Questions(2, "What are reasons to pick on-prem over cloud?",
-                                   "Security Reasons, Low Availability Needs, Local Network services")
-        self.q_dict[3] = Questions(3, "What are reasons to pick cloud over on-prem?",
-                                   "Global availability needs, Growth of user base prediction")
 
     # -----------------------------------------------------------------------------------------------------------------
     #    Function: getQuestion(self, ctx)
@@ -36,12 +17,32 @@ class ReviewQs(commands.Cog):
     # -----------------------------------------------------------------------------------------------------------------
     @commands.command(name='getQuestion', help='Get a review question. EX: $getQuestion')
     async def getQuestion(self, ctx):
+        # get random question from db
         rand = db.query(
             'SELECT question, answer FROM review_questions WHERE guild_id = %s ORDER BY RANDOM() LIMIT 1',
             (ctx.guild.id, )
         )
+
+        # send question to guild
         for q, a in rand:
             await ctx.send(f"{q} \n ||{a}||")
+
+    # -----------------------------------------------------------------------------------------------------------------
+    #    Function: get_question_error(self, ctx, error)
+    #    Description: prints error message for getQuestion command
+    #    Inputs:
+    #       - ctx: context of the command
+    #       - error: error message
+    #    Outputs:
+    #       - Error details
+    # -----------------------------------------------------------------------------------------------------------------
+    @getQuestion.error
+    async def get_question_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(
+                'To use the getQuestion command, do: $getQuestion \n')
+        print(error)
+        await ctx.message.delete()
 
     # -----------------------------------------------------------------------------------------------------------------
     #    Function: addQuestion(self, ctx, qs, ans)
@@ -66,6 +67,23 @@ class ReviewQs(commands.Cog):
         await ctx.send(
             "A new review question has been added! Question: {} and Answer: {}.".format(qs, ans))
 
+    # -----------------------------------------------------------------------------------------------------------------
+    #    Function: add_question_error(self, ctx, error)
+    #    Description: prints error message for addQuestion command
+    #    Inputs:
+    #       - ctx: context of the command
+    #       - error: error message
+    #    Outputs:
+    #       - Error details
+    # -----------------------------------------------------------------------------------------------------------------
+    @addQuestion.error
+    async def add_question_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(
+                'To use the addQuestion command, do: $addQuestion \"Question\" \"Answer\" \n'
+                '(For example: $addQuestion \"What class is this?\" "CSC510")')
+        print(error)
+        await ctx.message.delete()
 
 def setup(bot):
     n = ReviewQs(bot)
