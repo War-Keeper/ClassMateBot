@@ -1,11 +1,9 @@
 # Copyright (c) 2021 War-Keeper
-import discord
-from discord.ext import commands
 import os
-import csv
 import sys
 
-from discord.ext.commands.core import group
+import discord
+from discord.ext import commands
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import db
@@ -46,7 +44,8 @@ class Groups(commands.Cog):
 
         if group_num < 0 or group_num > 99:
             await ctx.send('Not a valid group')
-            await ctx.send('To use the join command, do: $join \'Group\' <Num> where 0 <= <Num> <= 99 \n ( For example: $join Group 0 )')
+            await ctx.send('To use the join command, do: $join \'Group\' <Num> where 0 <= <Num> <= 99 \n '
+            '( For example: $join Group 0 )')
             return
 
         members_in_group = [row[0] for row in db.query(
@@ -146,7 +145,8 @@ class Groups(commands.Cog):
     async def group(self, ctx):
         # load groups csv
         groups = db.query(
-            'SELECT group_num, array_agg(member_name) FROM group_members WHERE guild_id = %s GROUP BY group_num ORDER BY group_num',
+            'SELECT group_num, array_agg(member_name) '
+            'FROM group_members WHERE guild_id = %s GROUP BY group_num ORDER BY group_num',
             (ctx.guild.id,)
         )
 

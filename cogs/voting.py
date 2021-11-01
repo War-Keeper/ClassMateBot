@@ -1,15 +1,11 @@
 # Copyright (c) 2021 War-Keeper
-
-import csv
-import discord
-from discord.ext import commands
 import os
 import sys
 
+from discord.ext import commands
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import db
-
-
 # -----------------------------------------------------------
 # This File contains commands for voting on projects,
 # displaying which groups have signed up for which project
@@ -100,11 +96,17 @@ class Voting(commands.Cog):
     # @commands.dm_only()
     async def projects(self, ctx):
         projects = db.query(
-            "SELECT project_num, string_agg(group_num::text, ', ') AS group_members FROM project_groups WHERE guild_id = %s GROUP BY project_num",
+            "SELECT project_num, string_agg(group_num::text, ', ') AS group_members "
+            "FROM project_groups WHERE guild_id = %s GROUP BY project_num",
             (ctx.guild.id,)
         )
-        
-        await ctx.send('\n'.join(f'Project {project_num}: Group(s) {group_members}' for project_num, group_members in projects))
+
+        await ctx.send(
+            '\n'.join(
+                f'Project {project_num}: Group(s) {group_members}'
+                for project_num, group_members in projects
+            )
+        )
 
 
 # -----------------------------------------------------------
@@ -112,5 +114,3 @@ class Voting(commands.Cog):
 # -----------------------------------------------------------
 def setup(bot):
     bot.add_cog(Voting(bot))
-
-

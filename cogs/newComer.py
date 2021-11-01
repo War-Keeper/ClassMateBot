@@ -1,9 +1,10 @@
-import discord
-from discord.ext import commands
+# This file contains functionality related to new student verification
 import os
-import csv
 import random
 import sys
+
+import discord
+from discord.ext import commands
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import db
@@ -43,14 +44,17 @@ class Helper(commands.Cog):
 
         # checks if the user running the command has the unveirifed role
         if unverified in member.roles:
-            if name == None:
+            if name is None:
                 await ctx.send(
                     "To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )"
                 )
             else:
                 # finds the verified role in the guild
                 verified = discord.utils.get(ctx.guild.roles, name=self.VERIFIED_MEMBER_ROLE)
-                db.query('INSERT INTO name_mappings (guild_id, username, real_name) VALUES (%s, %s, %s)', (ctx.guild.id, member.name, name))
+                db.query(
+                    'INSERT INTO name_mappings (guild_id, username, real_name) VALUES (%s, %s, %s)',
+                    (ctx.guild.id, member.name, name)
+                )
 
                 await member.add_roles(verified)  # adding verfied role
                 await member.remove_roles(unverified)  # removed verfied role
