@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 from discord.ext.commands import Bot, has_permissions, CheckFailure
 from better_profanity import profanity
 profanity.load_censor_words()
+import db
+
 # ----------------------------------------------------------------------------------------------
 # Initializes the discord bot with a unique TOKEN and joins the bot to a server provided by the
 # GUILD token. Handles bot shutdown and error events
@@ -20,8 +22,6 @@ profanity.load_censor_words()
 load_dotenv()
 # Get the token for our bot
 TOKEN = os.getenv("TOKEN")
-# Get the token for our discord server
-GUILD = os.getenv("GUILD")
 UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
 # Set the bots intents to all
 intents = Intents.all()
@@ -40,16 +40,17 @@ bot = Bot(intents=intents, command_prefix="$")
 # ------------------------------------------------------------------------------------------------------------------
 @bot.event
 async def on_ready():
-    guild = discord.utils.get(bot.guilds, name=GUILD)
+    # guild = discord.utils.get(bot.guilds, name=GUILD)
 
-    print(
-        f"{bot.user} is connected to the following guild:\n"
-        f"{guild.name}(id: {guild.id})"
-    )
+    # print(
+    #     f"{bot.user} is connected to the following guild:\n"
+    #     f"{guild.name}(id: {guild.id})"
+    # )
 
-    members = "\n -".join([member.name for member in guild.members])
-    print(f"Guild Members:\n - {members}")
-
+    # members = "\n -".join([member.name for member in guild.members])
+    # print(f"Guild Members:\n - {members}")
+    # db.connect()
+    
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             bot.load_extension(f"cogs.{filename[:-3]}")
