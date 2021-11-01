@@ -47,3 +47,9 @@ CREATE TABLE answers (
     author_id       BIGINT,
     author_role     VARCHAR NOT NULL
 )
+
+CREATE TABLE review_questions (
+    guild_id        BIGINT NOT NULL,
+    question        VARCHAR NOT NULL,
+    answer          VARCHAR NOT NULL
+);
