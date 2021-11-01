@@ -73,7 +73,8 @@ class Qanda(commands.Cog):
             await ctx.author.send(
                 'To use the ask command, do: $ask \"QUESTION\" anonymous*<optional>* \n '
                 '(For example: $ask \"What class is this?\" anonymous)')
-        print(error)
+        else:
+            await ctx.author.send(error)
         await ctx.message.delete()
 
     # -----------------------------------------------------------------------------------------------------------------
@@ -172,7 +173,8 @@ class Qanda(commands.Cog):
             await ctx.author.send(
                 'To use the answer command, do: $answer QUESTION_NUMBER \"ANSWER\" anonymous*<optional>*\n '
                 '(For example: $answer 2 \"Yes\")')
-        print(error)
+        else:
+            await ctx.author.send(error)
         await ctx.message.delete()
 
 
