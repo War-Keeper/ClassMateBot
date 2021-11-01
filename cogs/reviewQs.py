@@ -41,6 +41,8 @@ class ReviewQs(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(
                 'To use the getQuestion command, do: $getQuestion \n')
+        else:
+            await ctx.send('Unidentified command..please use $help to get the list of available comamnds')
         print(error)
         await ctx.message.delete()
 
@@ -82,6 +84,8 @@ class ReviewQs(commands.Cog):
             await ctx.send(
                 'To use the addQuestion command, do: $addQuestion \"Question\" \"Answer\" \n'
                 '(For example: $addQuestion \"What class is this?\" "CSC510")')
+        else:
+            await ctx.send('Unidentified command..please use $help to get the list of available comamnds')
         print(error)
         await ctx.message.delete()
 
