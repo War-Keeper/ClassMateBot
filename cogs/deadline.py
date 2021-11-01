@@ -305,9 +305,9 @@ class Deadline(commands.Cog):
 
     #     await ctx.send("I will remind you that in {} {}.".format(str(quantity), time_unit + s))
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        await ctx.send('Unidentified command..please use $help to get the list of available comamnds')
+    # @commands.Cog.listener()
+    # async def on_command_error(self, ctx, error):
+    #     await ctx.send('Unidentified command..please use $help to get the list of available comamnds')
 
     # -----------------------------------------------------------------------------------------------------
     #    Function: delete_old_reminders(self)
