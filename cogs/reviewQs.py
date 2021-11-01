@@ -1,6 +1,7 @@
 # This functionality provides mechanism for instructors to post a random review question from the databse
 from discord.ext import commands
 import random
+import db
 
 class Questions:
     ''' Class containing needed question/answer information and identification '''
@@ -35,19 +36,35 @@ class ReviewQs(commands.Cog):
     # -----------------------------------------------------------------------------------------------------------------
     @commands.command(name='getQuestion', help='Get a review question. EX: $getQuestion')
     async def getQuestion(self, ctx):
+        rand = db.query(
+            'SELECT question, answer FROM review_questions WHERE guild_id = %s ORDER BY RANDOM() LIMIT 1',
+            (ctx.guild.id, )
+        )
+        for q, a in rand:
+            await ctx.send(f"{q} \n ||{a}||")
 
-        # check if all quesitons have been asked and reset recents
-        if len(self.recent_q) == len(self.q_dict):
-            self.recent_q.clear()
-        # get a random question number from available numbers
-        rand = random.choice(list(self.q_dict.keys()))
-        # check if the question has been asked
-        while rand in self.recent_q:
-            rand = random.choice(list(self.q_dict.keys()))
-        self.recent_q.append(rand)
-        question = self.q_dict[rand].question + '\n' + '||' + self.q_dict[rand].answer + '||'
+    # -----------------------------------------------------------------------------------------------------------------
+    #    Function: addQuestion(self, ctx, qs, ans)
+    #    Description: allow instructors to add review question
+    #    Inputs:
+    #       - ctx: context of the command
+    #       - qs: review question to add
+    #       - ans: answer to review question
+    #    Outputs:
+    #       - success message
+    # -----------------------------------------------------------------------------------------------------------------
+    @commands.has_role('Instructor')
+    @commands.command(name='addQuestion', help='Add a review question. '
+                                               'EX: $addQuestion \"What class is this?\" \"Software Engineering\"')
+    async def addQuestion(self, ctx, qs: str, ans: str):
+        # add question to database
+        db.query(
+            'INSERT INTO review_questions (guild_id, question, answer) VALUES (%s, %s, %s)',
+            (ctx.guild.id, qs, ans)
+        )
 
-        await ctx.send(question)
+        await ctx.send(
+            "A new review question has been added! Question: {} and Answer: {}.".format(qs, ans))
 
 
 def setup(bot):

@@ -31,3 +31,9 @@ CREATE TABLE pinned_messages (
     description     VARCHAR NOT NULL,
     link            VARCHAR NOT NULL
 );
+
+CREATE TABLE review_questions (
+    guild_id        BIGINT NOT NULL,
+    question        VARCHAR NOT NULL,
+    answer          VARCHAR NOT NULL
+);
