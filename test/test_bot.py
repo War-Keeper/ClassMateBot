@@ -204,8 +204,8 @@ async def test_pinError(bot):
     # Tests pinning without a message, will fail
     with pytest.raises(Exception):
         await dpytest.message("$pin")
-        assert dpytest.verify().message().contains().content(
-            'To use the pin command, do: $pin TAGNAME LINK DESCRIPTION \n ( For example: $pin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890813190433292298 HW8 reminder )')
+    assert dpytest.verify().message().contains().content(
+        'To use the pin command, do: $pin TAGNAME LINK DESCRIPTION \n ( For example: $pin HW https://discordapp.com/channels/139565116151562240/139565116151562240/890813190433292298 HW8 reminder )')
 
 
 # --------------------
@@ -230,6 +230,39 @@ async def test_voting(bot):
     # Test voting, should raise an exception since we aren't in a group
     with pytest.raises(Exception):
         await dpytest.message(content="$vote Project 1")
-        assert dpytest.verify().message().contains().content(
-            "Could not fine the Group you are in, please contact a TA or join with your group number")
+    assert dpytest.verify().message().contains().content(
+        "Could not find the Group you are in, please contact a TA or join with your group number")
+    assert dpytest.verify().message().contains().content(
+        'To join a group, use the join command, do: $vote \'Project\' <Num> \n'
+        '( For example: $vote Project 0 )')
 
+
+# --------------------
+# Tests cogs/reviewQs
+# --------------------
+@pytest.mark.asyncio
+async def test_review_qs(bot):
+    # Test review question functionalities
+    # create roles and get user
+    user = dpytest.get_config().members[0]
+    guild = dpytest.get_config().guilds[0]
+    await guild.create_role(name="Instructor")
+    role = discord.utils.get(guild.roles, name="Instructor")
+    await dpytest.add_role(user, role)
+
+    # Test adding a question
+    await dpytest.message("$addQuestion \"What class is this?\" \"CSC510\"", member=user)
+    assert dpytest.verify().message().contains().content(
+        'A new review question has been added! Question: What class is this? and Answer: CSC510.')
+
+    # Test getting a question
+    await dpytest.message("$getQuestion", member=user)
+    assert dpytest.verify().message().contains().content(
+        "What class is this? \n ||CSC510||")
+
+    # Test error
+    with pytest.raises(Exception):
+        await dpytest.message("$addQuestion \"Is this a test question?\"", member=user)
+    assert dpytest.verify().message().contains().content(
+        'To use the addQuestion command, do: $addQuestion \"Question\" \"Answer\" \n'
+        '(For example: $addQuestion \"What class is this?\" "CSC510")')
