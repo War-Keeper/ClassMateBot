@@ -99,9 +99,9 @@ async def on_message(message):
 @bot.event
 async def on_message_edit(before, after):
     ''' run on message edited '''
-    if profanity.check_profanity(after.content):
+    if profanity.contains_profanity(after.content):
         await after.channel.send(after.author.name + ' says: ' +
-            profanity.censor_profanity(after.content))
+            profanity.censor(after.content))
         await after.delete()
 
 # ------------------------------------------------------------------------------------------

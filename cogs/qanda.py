@@ -91,7 +91,6 @@ class Qanda(commands.Cog):
         # check if question number exists
         q = db.query('SELECT number, question, author_id, msg_id FROM questions WHERE guild_id = %s AND number = %s',
                      (ctx.guild.id, num))
-        print(q)
         if len(q) == 0:
             await ctx.author.send('Invalid question number: ' + str(num))
             # delete user msg
