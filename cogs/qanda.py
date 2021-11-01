@@ -36,7 +36,7 @@ class Qanda(commands.Cog):
         elif anonymous == 'anonymous':
             author = None
         else:
-            await ctx.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
+            await ctx.author.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
             await ctx.message.delete()
             return
 
@@ -70,7 +70,7 @@ class Qanda(commands.Cog):
     @askQuestion.error
     async def ask_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(
+            await ctx.author.send(
                 'To use the ask command, do: $ask \"QUESTION\" anonymous*<optional>* \n '
                 '(For example: $ask \"What class is this?\" anonymous)')
         print(error)
@@ -104,7 +104,7 @@ class Qanda(commands.Cog):
         elif anonymous == 'anonymous':
             author = None
         else:
-            await ctx.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
+            await ctx.author.send('Unknown input for *anonymous* option. Please type **anonymous** or leave blank.')
             await ctx.message.delete()
             return
 
@@ -169,7 +169,7 @@ class Qanda(commands.Cog):
     @answer.error
     async def answer_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(
+            await ctx.author.send(
                 'To use the answer command, do: $answer QUESTION_NUMBER \"ANSWER\" anonymous*<optional>*\n '
                 '(For example: $answer 2 \"Yes\")')
         print(error)
