@@ -24,6 +24,12 @@ class Qanda(commands.Cog):
                                        'EX: $ask /"When is the exam?/" anonymous')
     async def askQuestion(self, ctx, qs: str, anonymous=''):
 
+        # make sure to check that this is actually being asked in the Q&A channel
+        if not ctx.channel.name == 'q-and-a':
+            await ctx.author.send('Please send questions to the #q-and-a channel.')
+            await ctx.message.delete()
+            return
+
         # get author
         if anonymous == '':
             author = ctx.message.author.id
@@ -86,6 +92,11 @@ class Qanda(commands.Cog):
                            'EX: $answer 1 /"Oct 12/" anonymous')
     async def answer(self, ctx, num, ans, anonymous=''):
         ''' answer the specific question '''
+        # make sure to check that this is actually being asked in the Q&A channel
+        if not ctx.channel.name == 'q-and-a':
+            await ctx.author.send('Please send answers to the #q-and-a channel.')
+            await ctx.message.delete()
+            return
 
         # get author
         if anonymous == '':
