@@ -35,7 +35,6 @@ class userRanking(commands.Cog):
         #     await self.update_data(users, message.author)
         #     await self.add_experience(users, message.author)
         #     await self.level_up(users, message.author, message.channel)
-        #
         #     with open('data/participation/users.json', 'w') as f:
         #         json.dump(users, f, indent=4)
         pass
