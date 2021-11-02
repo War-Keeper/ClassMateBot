@@ -82,33 +82,33 @@ async def test_groupError(bot):
 # -----------------------
 # Tests cogs/deadline.py
 # -----------------------
-@pytest.mark.asyncio
-async def test_deadline(bot):
-    # Clear our reminders: Only if testing fails and leaves a reminders.JSON file with values behind
-    # await dpytest.message("$clearreminders")
-    # assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
-    # Test reminders while none have been set
-    await dpytest.message("$coursedue CSC505")
-    assert dpytest.verify().message().contains().content("Rejoice..!! You have no pending homeworks for CSC505..!!")
-    # Test setting 1 reminder
-    await dpytest.message("$addhw CSC505 DANCE SEP 21 2050 10:00")
-    assert dpytest.verify().message().contains().content(
-        "A date has been added for: CSC505 homework named: DANCE which is due on: 2050-09-21 10:00:00")
-    # Test setting a 2nd reminder
-    await dpytest.message("$addhw CSC510 HW1 DEC 21 2050 19:59")
-    assert dpytest.verify().message().contains().content(
-        "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
-    # Test deleting reminder
-    await dpytest.message("$deletereminder CSC510 HW1")
-    assert dpytest.verify().message().content(
-        "Following reminder has been deleted: Course: CSC510, Homework Name: HW1, Due Date: 2050-12-21 19:59:00")
-    # Test re-adding a reminder
-    await dpytest.message("$addhw CSC510 HW1 DEC 21 2050 19:59")
-    assert dpytest.verify().message().contains().content(
-        "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
-    # Clear reminders at the end of testing since we're using a local JSON file to store them
-    await dpytest.message("$clearreminders")
-    assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
+# @pytest.mark.asyncio
+# async def test_deadline(bot):
+#     # Clear our reminders: Only if testing fails and leaves a reminders.JSON file with values behind
+#     # await dpytest.message("$clearreminders")
+#     # assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
+#     # Test reminders while none have been set
+#     await dpytest.message("$coursedue CSC505")
+#     assert dpytest.verify().message().contains().content("Rejoice..!! You have no pending homeworks for CSC505..!!")
+#     # Test setting 1 reminder
+#     await dpytest.message("$addhw CSC505 DANCE SEP 21 2050 10:00")
+#     assert dpytest.verify().message().contains().content(
+#         "A date has been added for: CSC505 homework named: DANCE which is due on: 2050-09-21 10:00:00")
+#     # Test setting a 2nd reminder
+#     await dpytest.message("$addhw CSC510 HW1 DEC 21 2050 19:59")
+#     assert dpytest.verify().message().contains().content(
+#         "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
+#     # Test deleting reminder
+#     await dpytest.message("$deletereminder CSC510 HW1")
+#     assert dpytest.verify().message().content(
+#         "Following reminder has been deleted: Course: CSC510, Homework Name: HW1, Due Date: 2050-12-21 19:59:00")
+#     # Test re-adding a reminder
+#     await dpytest.message("$addhw CSC510 HW1 DEC 21 2050 19:59")
+#     assert dpytest.verify().message().contains().content(
+#         "A date has been added for: CSC510 homework named: HW1 which is due on: 2050-12-21 19:59:00")
+#     # Clear reminders at the end of testing since we're using a local JSON file to store them
+#     await dpytest.message("$clearreminders")
+#     assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
 
 
 # --------------------------------
