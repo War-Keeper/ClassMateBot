@@ -27,17 +27,16 @@ class userRanking(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        # if not message.author.bot:
-        #     cur_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        #     os.chdir(cur_dir)
-        #     with open('data/participation/users.json', 'r') as f:
-        #         users = json.load(f)
-        #     await self.update_data(users, message.author)
-        #     await self.add_experience(users, message.author)
-        #     await self.level_up(users, message.author, message.channel)
-        #     with open('data/participation/users.json', 'w') as f:
-        #         json.dump(users, f, indent=4)
-        pass
+        if not message.author.bot:
+            cur_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            os.chdir(cur_dir)
+            with open('data/participation/users.json', 'r') as f:
+                users = json.load(f)
+            await self.update_data(users, message.author)
+            await self.add_experience(users, message.author)
+            await self.level_up(users, message.author, message.channel)
+            with open('data/participation/users.json', 'w') as f:
+                json.dump(users, f, indent=4)
 
     async def update_data(self, users, user):
         if not str(user.id) in users:
