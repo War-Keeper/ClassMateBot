@@ -1,6 +1,7 @@
 # Copyright (c) 2021 War-Keeper
 import discord
 import os
+import sys
 from datetime import datetime, timedelta
 import discord.ext.test as dpytest
 from dotenv import load_dotenv
@@ -140,8 +141,6 @@ async def test_listreminders(bot):
     await dpytest.message("$clearreminders")
     assert dpytest.verify().message().contains().content("All reminders have been cleared..!!")
 
-    # Tests cogs/deadline.py
-
 
 # ------------------------------
 # Tests reminders due this week
@@ -203,6 +202,59 @@ async def test_unpinning(bot):
     await dpytest.message("$updatepin TestMessage2 www.zoom.com test")
     assert dpytest.verify().message().contains().content(
         "A pinned message has been updated with tag: TestMessage2 and new link: www.zoom.com")
+
+# ---------------------------
+# Tests cogs/emailAddressSpec
+# ---------------------------
+@pytest.mark.asyncio
+async def test_emailAddressCRUD(bot):
+    # Test email address specification to ensure functionality and edge cases
+    # Tests the add email functionality
+    await dpytest.message(content="$add_email noreplytest@classmatebot.com")
+    assert dpytest.verify().message().contains().content("Email address has been configured successfully")
+    # Tests the update email functionality
+    await dpytest.message("$update_email noreplytest1@classmatebot.com")
+    assert dpytest.verify().message().contains().content(
+        "Email address has been updated successfully..!")
+    # Tests view mail functionality
+    await dpytest.message("$view_email")
+    assert dpytest.verify().message().contains().content(
+        "currently configured email address:noreplytest1@classmatebot.com")
+    # Tests delete email functionality
+    await dpytest.message("$delete_email")
+    assert dpytest.verify().message().contains().content(
+        "Email address has been deleted successfully..!")
+    # Tests wrong use of command
+    await dpytest.message("$add_email no_reply_test")
+    assert dpytest.verify().message().contains().content(
+        "Enter a valid Email Address..!")
+    await dpytest.message("$update_email no_reply_test")
+    assert dpytest.verify().message().contains().content(
+        "Enter a valid Email Address..!")
+    await dpytest.message("$add_email no_reply_test@example")
+    assert dpytest.verify().message().contains().content(
+        "Enter a valid Email Address..!")
+    await dpytest.message("$add_email @example.com")
+    assert dpytest.verify().message().contains().content(
+        "Enter a valid Email Address..!")
+    await dpytest.message("$delete_email")
+    assert dpytest.verify().message().contains().content(
+        "There is no email address configured..!")
+    await dpytest.message("$view_email")
+    assert dpytest.verify().message().contains().content(
+        "There is no email address configured..!")
+    with pytest.raises(Exception):
+        await dpytest.message(content="$add_email")
+        assert dpytest.verify().message().contains().content(
+            "To use the add_email command, do: $add_email email_address")
+        assert dpytest.verify().message().contains().content(
+            "( For example: $add_email no-reply@example.com)")
+    with pytest.raises(Exception):
+        await dpytest.message(content="$update_email")
+        assert dpytest.verify().message().contains().content(
+            "To use the add_email command, do: $add_email email_address")
+        assert dpytest.verify().message().contains().content(
+            "( For example: $update_email no-reply@example.com)")
 
 
 # ----------------------
