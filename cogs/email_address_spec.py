@@ -1,7 +1,7 @@
 """
-This file contains several methods to manage configured email address.
-User can configure, update, view, and delete email address whenever required.
-The configured email address is used to mail attachments and remainders.
+    This file contains several methods to manage configured email address.
+    User can configure, update, view, and delete email address whenever required.
+    The configured email address is used to mail attachments and remainders.
 """
 import os
 import re
@@ -12,13 +12,13 @@ from discord.ext import commands
 
 class EmailAddressCRUD(commands.Cog):
     """
-    EmailAddressCRUD class provides various CRUD methods to manage email addresses of users.
+        EmailAddressCRUD class provides various CRUD methods to manage email addresses of users.
     """
 
-    # -----------
-    # initialize
-    # -----------
     def __init__(self, bot):
+        """
+            initialize
+        """
         self.bot = bot
         self.email_list = None
         cur_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +40,18 @@ class EmailAddressCRUD(commands.Cog):
                       help="add email address to receive notifications and files,"
                            " ex. $add_email no-reply@example.com")
     async def add_email_address(self, ctx, email_address: str):
+        """
+            Configures the specified email address to json.
+
+            Parameters:
+                ctx: used to access the values passed through the current context
+                email_address: email address specified by the author
+
+            Returns:
+                returns either an error stating a reason for failure or returns a success message
+                indicating that the specified email address has been added.
+
+        """
         author = ctx.message.author
 
         if not EmailAddressCRUD.validate_email_address(email_address):
@@ -81,6 +93,17 @@ class EmailAddressCRUD(commands.Cog):
                       help="displays the configured email address of an user, ex. "
                            "$view_email no-reply@example.com")
     async def view_email_address(self, ctx):
+        """
+            Displays the configured email address of user.
+
+            Parameters:
+                ctx: used to access the values passed through the current context
+
+            Returns:
+                returns either an error stating a reason for failure or returns a configured email
+                address.
+
+        """
         author = ctx.message.author
 
         if not self.email_list:
@@ -107,6 +130,18 @@ class EmailAddressCRUD(commands.Cog):
     @commands.command(name="update_email",
                       help="update email address of an user,ex. $update_email no-reply@example.com")
     async def update_email_address(self, ctx, email_address: str):
+        """
+            Updates the configured email address in json with the specified one.
+
+            Parameters:
+                ctx: used to access the values passed through the current context
+                email_address: email address specified by the author
+
+            Returns:
+                returns either an error stating a reason for failure or returns a success message
+                indicating that the specified email address has been added.
+
+        """
         author = ctx.message.author
 
         if not EmailAddressCRUD.validate_email_address(email_address):
@@ -146,6 +181,17 @@ class EmailAddressCRUD(commands.Cog):
     @commands.command(name="delete_email",
                       help="delete email address of an user,ex. $delete_email no-reply@example.com")
     async def delete_email_address(self, ctx):
+        """
+            Deletes the configured email address in json.
+
+            Parameters:
+                ctx: used to access the values passed through the current context
+
+            Returns:
+                returns either an error stating a reason for failure or returns a success message
+                indicating that the specified email address has been deleted.
+
+        """
         author = ctx.message.author
 
         if not self.email_list:
@@ -170,6 +216,15 @@ class EmailAddressCRUD(commands.Cog):
     # ----------------------------------------------------------------------------------------------
     @staticmethod
     def validate_email_address(email_address: str):
+        """
+           validates the given email address.
+
+            Parameters:
+                email_address: email_address provided as input.
+
+            Returns:
+                returns true if given email address is valid, false otherwise.
+        """
         email_regex = "^[a-z0-9]+[\\._]?[a-z0-9]+[@]\\w+[.]\\w{2,3}$"
         if re.search(email_regex, email_address):
             return True
@@ -180,4 +235,7 @@ class EmailAddressCRUD(commands.Cog):
 # add the file to the bots' cog system
 # -----------------------------------------------------------
 def setup(bot):
+    """
+       add the file to the bots' cog system.
+    """
     bot.add_cog(EmailAddressCRUD(bot))
