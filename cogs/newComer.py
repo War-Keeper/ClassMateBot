@@ -1,14 +1,15 @@
-import discord
-from discord.ext import commands
+"""This file contains several methods to verify new user"""
 import os
 import csv
 import random
+import discord
+from discord.ext import commands
 
 
-# ---------------------------------------------------------------------------------------
-# Contains commands for member verification, which is handled with direct DMs to the bot
-# ---------------------------------------------------------------------------------------
+
+
 class Helper(commands.Cog):
+    """Contains commands for member verification, which is handled with direct DMs to the bot"""
     GUILD = os.getenv("GUILD")
     UNVERIFIED_ROLE_NAME = os.getenv("UNVERIFIED_ROLE_NAME")
     VERIFIED_MEMBER_ROLE = os.getenv("VERIFIED_MEMBER_ROLE")
@@ -17,16 +18,6 @@ class Helper(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # -------------------------------------------------------------------------------------------------------------
-    #    Function: verify(self, ctx, *, name: str = None)
-    #    Description: Ask the bot to give the user the verified role in the server
-    #    Inputs:
-    #    - self: used to access parameters passed to the class through the constructor
-    #    - ctx: used to access the values passed through the current context
-    #    - *:
-    #    - name: name of the user to verify
-    #    Outputs: returns a success message if the user is sucessfully verified or error in case of syntax problems
-    # --------------------------------------------------------------------------------------------------------------
     @commands.dm_only()
     @commands.command(
         name="verify",
@@ -34,10 +25,19 @@ class Helper(commands.Cog):
         help="Request the bot to verify the user to get access to channels",
     )
     async def verify(self, ctx, *, name: str = None):
+        """ Function: verify(self, ctx, *, name: str = None)
+        Description: Ask the bot to give the user the verified role in the server
+        Inputs:
+        - self: used to access parameters passed to the class through the constructor
+        - ctx: used to access the values passed through the current context
+        - *:
+        - name: name of the user to verify
+        Outputs: returns a success message if the user is sucessfully verified or error in case of
+         syntax problems"""
         guild = None
-        for g in self.bot.guilds:  # finding guild using guild name
-            if g.name == self.GUILD:
-                guild = g
+        for gee in self.bot.guilds:  # finding guild using guild name
+            if gee.name == self.GUILD:
+                guild = gee
         member = guild.get_member(
             ctx.message.author.id
         )  # finding member using member id
@@ -47,9 +47,10 @@ class Helper(commands.Cog):
         if (
             unverified in member.roles
         ):  # checks if the user running the command has the unveirifed role
-            if name == None:
+            if name is None:
                 await ctx.send(
-                    "To use the verify command, do: $verify <your_full_name> \n ( For example: $verify Jane Doe )"
+                    "To use the verify command, do: $verify <your_full_name> \n ( For example: $ver"
+                    "ify Jane Doe )"
                 )
             else:
                 verified = discord.utils.get(
@@ -66,7 +67,8 @@ class Helper(commands.Cog):
                     "Thank you for verifying! You can start using " + self.GUILD + "!"
                 )
                 embed = discord.Embed(
-                    description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
+                    description="Click [Here](https://github.com/txt/se21) for the home page of the"
+                                " class Github page"
                 )
                 welcome_images = os.listdir(self.path)
                 selected_image = random.choice(welcome_images)
@@ -78,15 +80,15 @@ class Helper(commands.Cog):
         else:  # user has verified role
             await ctx.send("You are already verified!")
             embed = discord.Embed(
-                description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
+                description="Click [Here](https://github.com/txt/se21) for the home page of the cla"
+                            "ss Github page"
             )
             await member.send(embed=embed)
 
 
-# --------------------------------------
-# add the file to the bot's cog system
-# --------------------------------------
+
 def setup(bot):
+    """add the file to the bot's cog system"""
     bot.add_cog(Helper(bot))
 
 
