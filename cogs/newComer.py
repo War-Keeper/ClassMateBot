@@ -63,13 +63,7 @@ class NewComer(commands.Cog):
                 embed = discord.Embed(
                     description="Click [Here](https://github.com/txt/se21) for the home page of the class Github page"
                 )
-                welcome_images = os.listdir(self.path)
-                selected_image = random.choice(welcome_images)
-                file = discord.File(os.path.join(self.path, selected_image))
-                embed.set_image(
-                    url="attachment://" + selected_image
-                )  # Embedding the image
-                await member.send(file=file, embed=embed)
+                await member.send(embed=embed)
         else:  # user has verified role
             db.query('SELECT real_name from name_mapping where guild_id = %s and username = %s', (ctx.guild.id, member.name))
             await ctx.send("You are already verified!")
