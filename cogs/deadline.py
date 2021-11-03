@@ -316,7 +316,6 @@ class Deadline(commands.Cog):
     #    - self: used to access parameters passed to the class through the constructor
     # -----------------------------------------------------------------------------------------------------
     async def delete_old_reminders(self):
-        print("inside delete old reminders")
         while self is self.bot.get_cog("Deadline"):
             db.query('DELETE FROM reminders WHERE now() > due_date')
             await asyncio.sleep(5)

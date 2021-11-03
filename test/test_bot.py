@@ -211,19 +211,27 @@ async def test_pinError(bot):
 # --------------------
 # Tests cogs/newComer
 # --------------------
+'''
 @pytest.mark.asyncio
 async def test_verifyError(bot):
     # Test verification, should raise exception since channel isn't private
     with pytest.raises(Exception):
-        await dpytest.message(content="$verify", channel=0)
-    # Can only test this currently since dpytest doesn't allow us to test DM'ing
+        await dpytest.message(content="$verify", channel=0)'''
 
+@pytest.mark.asyncio
+async def test_verifyNoName(bot):
+    # Test verification without proper argument given
+    await dpytest.message("$verify")
+    # print(dpytest.get_message().content)
+    assert dpytest.verify().message().contains().content(
+        "To use the verify command, do: $verify <FirstName LastName> \n ( For example: $verify Jane Doe )")
 
-# We cannot currently test newComer.py in a meaningful way due to not having a way to DM the test bot directly.
+# We cannot currently test newComer.py in a meaningful way due to not having a way to DM the test bot directly,
+# as well as inability to have dpytest add/remove roles to test specific cases
 
 
 # --------------------
-# Tests cogs/newComer
+# Tests cogs/Voting
 # --------------------
 @pytest.mark.asyncio
 async def test_voting(bot):
