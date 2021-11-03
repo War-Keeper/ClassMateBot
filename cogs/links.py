@@ -27,7 +27,7 @@ class links(commands.Cog):
             temp.append(x[0])
         if temp:
             message_links.append(message.content)
-            with open('.\docs\Output.txt', "a") as f:
+            with open('.\data\links\links.txt', "a") as f:
                 f.write("Message containing Link :-  " + message.content + "\n")
                 f.close()
         else:
@@ -36,7 +36,7 @@ class links(commands.Cog):
 
     @commands.command()
     async def send_links(self, ctx):
-        await ctx.send(file=discord.File('.\docs\Output.txt'))
+        await ctx.send(file=discord.File('.\data\links\links.txt'))
 
 # -----------------------------------------------------------
 # add the file to the bot's cog system
